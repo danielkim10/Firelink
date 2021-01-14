@@ -5,6 +5,7 @@ var Notification = mongoose.model('Notification', {
     sender: String,
     recipient: String,
     date: Date,
+    dateRead: Date,
     type: String,
     teamID: String,
     tournamentID: String,
