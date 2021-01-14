@@ -46,6 +46,9 @@ export class UserProfileComponent implements OnInit {
   }
   teams: Array<Team>;
   roles: Array<Role>;
+  tournaments: Array<any>;
+  matches: Array<any>;
+  notifications: Array<any>;
 
   constructor(private router: Router, private authenticationService: AuthenticationService, private userProfileService: UserProfileService) { }
 
