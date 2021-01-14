@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col s6">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col s12">
+
+                        <div *ngIf="!user.teamID">
+                            <div *ngIf="!createMode">
+                                <div class="row">
+                                    <label *ngIf="!user.teamID">You are currently not in any team. Create or join a team</label>
+                                </div>
+                                <div class="row">
+                                    <button mat-flat-button color="primary" type="button" (click)="createTeam()">Create</button>
+                                    <button mat-flat-button color="primary" type="button">Join</button>
+                                </div>
+                            </div>
+                            <div *ngIf="createMode">
+                                <form #createTeamForm="ngForm" (ngSubmit)="onSubmitCreateTeam(createTeamForm)">
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Name</mat-label>
+                                            <input matInput name="name" #name="ngModel" [(ngModel)]="team.name" value={{team.name}} placeholder="Enter team name" required>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Tag</mat-label>
+                                            <input matInput name="tag" #name="ngModel" [(ngModel)]="team.tag" placeholder="Enter team tag" required>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Logo</mat-label>
+                                            <input matInput name="logo" #name="ngModel" [(ngModel)]="team.logo" placeholder="Select team logo">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <button mat-flat-button color="warn" type="button" (click)="back()">Back</button>
+                                        <button mat-flat-button color="primary" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div *ngIf="user.teamID">
+                            <div *ngIf="!editMode && defaultMode">
+                                <div class="row">
+                                    <label>Team Name: {{team.name}}</label>
+                                </div>
+                                <div class="row">
+                                    <label>Team Tag: {{team.tag}}</label>
+                                </div>
+                                <div class="row">
+                                    <label>Team Logo: {{team.logo}}</label>
+                                </div>
+                                <div class="row">
+                                    <label>Members</label>
+                                    <mat-selection-list #memberslist [multiple]="false">
+                                        <mat-list-option *ngFor="let member of members" [value]="member">
+                                            {{member._id}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                            </div>
+                            <div *ngIf="editMode">
+                                <form #editTeamForm="ngForm" (ngSubmit)="onSubmitEditTeam(editTeamForm)">
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Name</mat-label>
+                                            <input matInput type="text" name="name" #name="ngModel" [(ngModel)]="teamEdit.name" value={{teamEdit.name}}>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Tag</mat-label>
+                                            <input matInput type="text" name="tag" #name="ngModel" [(ngModel)]="teamEdit.tag" value={{teamEdit.tag}}>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Team Logo</mat-label>
+                                            <input matInput type="text" name="logo" #name="ngModel" [(ngModel)]="teamEdit.logo" value={{teamEdit.logo}}>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <button mat-flat-button color="primary" type="submit">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div *ngIf="addMemberMode">
+                                <div class="row">
+                                    <label>Recruiting</label>
+                                    <mat-selection-list #userrecruit [multiple]="false" [ngModel]="selectedUser" (ngModelChange)="onNgModelChange($event)">
+                                        <mat-list-option *ngFor="let user of users" [value]="user">
+                                            {{user.username}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                                <div>
+                                    <button mat-flat-button color="warn" (click)="back()">Back</button>
+                                    <button mat-flat-button color="primary" (click)="confirmAddMember()">Confirm</button>
+                                </div>
+                            </div>
+
+                            <button mat-flat-button *ngIf="editMode" color="warn" type="button" (click)="back()">Back</button>
+                            <button mat-flat-button *ngIf="!editMode && userCanEdit" color="primary" type="button" (click)="editTeam()">Edit</button>
+                            <button mat-flat-button color="warn" type="button" (click)="leaveTeam()">Leave</button>
+                            <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="inviteMember()">Invite</button>
+                            <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="addMember()">Add</button>
+                        </div>
+
+                        
+                        
+                        <button mat-flat-button color="accent" type="button" (click)="home()">Home</button>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

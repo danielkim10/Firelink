@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col s6">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col s12">
+                        <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <h1>Create Account</h1>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Username</mat-label>
+                                            <input matInput name="username" #name="ngModel" [(ngModel)]="credentials.username" placeholder="Enter username" required>
+                                            <mat-error>
+                                                Username is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Email</mat-label>
+                                            <input matInput name="email" #name="ngModel" [(ngModel)]="credentials.email" placeholder="Enter email" required>
+                                            <mat-error>
+                                                Email is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Password</mat-label>
+                                            <input matInput type="password" name="password" #name="ngModel" [(ngModel)]="credentials.password" placeholder="Enter password" required>
+                                            <mat-error>
+                                                Password is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <button mat-flat-button color="primary" type="submit">Register</button>
+                                    <button mat-flat-button color="primary" type="button" (click)="back()">Back</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

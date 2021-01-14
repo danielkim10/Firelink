@@ -1,0 +1,143 @@
+<div class="row">
+    <div class="col s6">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col s12">
+                        <mat-tab-group>
+                            <mat-tab label="Account">
+                                <div *ngIf="!editMode">
+                                    <div class="row">
+                                        <label>Username: {{user.username}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Email: {{user.email}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Role: {{role.name}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Description: {{user.description}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Summoner Name: {{user.summonerName}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Display Name: {{user.displayName}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Team: {{team.tag}} - {{team.name}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <label>Free agent: {{user.freeAgent}}</label>
+                                    </div>
+                                    <div class="row">
+                                        <button mat-flat-button color="warn" type="button" (click)="deactivate()">Deactivate</button>
+                                        <button mat-flat-button color="accent" type="button" (click)="home()">Home</button>
+                                        <button mat-flat-button color="primary" type="button" *ngIf="!editMode" (click)="editProfile()">Edit</button>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="editMode">
+                                    <form #editProfileForm="ngForm" (ngSubmit)="onSubmit(editProfileForm)">
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Username</mat-label>
+                                                <input matInput type="text" name="username" #name="ngModel" [(ngModel)]="userEdit.username" value={{userEdit.username}}>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Email</mat-label>
+                                                <input matInput type="text" name="email" #name="ngModel" [(ngModel)]="userEdit.email" value={{userEdit.email}}> 
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Role</mat-label>
+                                                <mat-select name="role" #name="ngModel" [(ngModel)]="userEdit.role" [(value)]="userEdit.role">
+                                                    <mat-option *ngFor="let role of roles" [value]="role._id">
+                                                        {{role.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Description</mat-label>
+                                                <textarea matInput name="description" #name="ngModel" [(ngModel)]="userEdit.description" value={{userEdit.description}}></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Summoner Name</mat-label>
+                                                <input matInput name="summonerName" #name="ngModel" [(ngModel)]="userEdit.summonerName" type="text" value={{userEdit.summonerName}}>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Display Name</mat-label>
+                                                <input matInput name="displayName" #name="ngModel" [(ngModel)]="userEdit.displayName" type="text" value={{userEdit.displayName}}>
+                                            </mat-form-field>
+                                        </div>
+                                        
+                                        <div class="row">
+                                                <label>Free Agent</label>
+                                                <mat-checkbox name="freeAgent" #name="ngModel" [(ngModel)]="userEdit.freeAgent"></mat-checkbox>
+                                        </div>
+                                        <div class="row">
+                                            <button mat-flat-button color="warn" type="button" (click)="stopEditing()">Back</button>
+                                            <button mat-flat-button color="primary" type="submit">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </mat-tab>
+                            <mat-tab label="History">
+                                <div class="row">
+                                    <label>Team History:</label>
+                                    <mat-selection-list #teamHistory>
+                                        <mat-list-option *ngFor="let team of teams">
+                                            {{team.name}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                                <div class="row">
+                                    <label>Tournament History:</label>
+                                    <mat-selection-list #tournamentHistory>
+                                        <mat-list-option *ngFor="let tournament of tournaments">
+                                            {{tournament.name}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                                <div class="row">
+                                    <label>Match History:</label>
+                                    <mat-selection-list #matchHistory>
+                                        <mat-list-option *ngFor="let match of matches">
+                                            {{match.name}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Notifications">
+                                <div class="row">
+                                    <label>Notifications</label>
+                                    <mat-selection-list #notificationHistory>
+                                        <mat-list-option *ngFor="let notification of notifications">
+                                            {{notification.name}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Settings">
+                                <div class="row">
+                                    <label>Settings</label>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

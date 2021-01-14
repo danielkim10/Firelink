@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col s6">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col s12">
+                        <mat-selection-list #usersearch>
+                            <mat-list-option *ngFor="let user of users">
+                                {{user.username}}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </div>
+                </div>
+                <div class="row">
+                    <button mat-flat-button color="warn" type="button" (click)="back()">Back</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
