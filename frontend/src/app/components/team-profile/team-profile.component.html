@@ -44,75 +44,266 @@
                         </div>
 
                         <div *ngIf="user.teamID">
-                            <div *ngIf="!editMode && defaultMode">
-                                <div class="row">
-                                    <label>Team Name: {{team.name}}</label>
-                                </div>
-                                <div class="row">
-                                    <label>Team Tag: {{team.tag}}</label>
-                                </div>
-                                <div class="row">
-                                    <label>Team Logo: {{team.logo}}</label>
-                                </div>
-                                <div class="row">
-                                    <label>Members</label>
-                                    <mat-selection-list #memberslist [multiple]="false">
-                                        <mat-list-option *ngFor="let member of members" [value]="member">
-                                            {{member._id}}
-                                        </mat-list-option>
-                                    </mat-selection-list>
-                                </div>
-                            </div>
-                            <div *ngIf="editMode">
-                                <form #editTeamForm="ngForm" (ngSubmit)="onSubmitEditTeam(editTeamForm)">
-                                    <div class="row">
-                                        <mat-form-field>
-                                            <mat-label>Team Name</mat-label>
-                                            <input matInput type="text" name="name" #name="ngModel" [(ngModel)]="teamEdit.name" value={{teamEdit.name}}>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="row">
-                                        <mat-form-field>
-                                            <mat-label>Team Tag</mat-label>
-                                            <input matInput type="text" name="tag" #name="ngModel" [(ngModel)]="teamEdit.tag" value={{teamEdit.tag}}>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="row">
-                                        <mat-form-field>
-                                            <mat-label>Team Logo</mat-label>
-                                            <input matInput type="text" name="logo" #name="ngModel" [(ngModel)]="teamEdit.logo" value={{teamEdit.logo}}>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="row">
-                                        <button mat-flat-button color="primary" type="submit">Save</button>
-                                    </div>
-                                </form>
-                            </div>
+                            <mat-tab-group>
+                                <mat-tab label="Overview">
+                                    <div *ngIf="!editMode && defaultMode">
+                                        <div class="row">
+                                            <label>Team Name: {{team.name}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label>Team Tag: {{team.tag}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label>Team Logo: {{team.logo}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <mat-card>
+                                                <mat-card-header>
+                                                    <mat-card-title>Members ({{members.length}}/15)</mat-card-title>
+                                                </mat-card-header>
+                                                <mat-card-content>
 
-                            <div *ngIf="addMemberMode">
-                                <div class="row">
-                                    <label>Recruiting</label>
-                                    <mat-selection-list #userrecruit [multiple]="false" [ngModel]="selectedUser" (ngModelChange)="onNgModelChange($event)">
-                                        <mat-list-option *ngFor="let user of users" [value]="user">
-                                            {{user.username}}
-                                        </mat-list-option>
-                                    </mat-selection-list>
-                                </div>
-                                <div>
-                                    <button mat-flat-button color="warn" (click)="back()">Back</button>
-                                    <button mat-flat-button color="primary" (click)="confirmAddMember()">Confirm</button>
-                                </div>
-                            </div>
+                                                    <table mat-table [dataSource]="members">
+                                                        <ng-container matColumnDef="username">
+                                                            <th mat-header-cell *matHeaderCellDef>  Username  </th>
+                                                            <td mat-cell *matCellDef="let member" (click)="testClick()">{{member.username}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="role">
+                                                            <th mat-header-cell *matHeaderCellDef>  Role  </th>
+                                                            <td mat-cell *matCellDef="let member">{{member.role.name}}</td>
+                                                        </ng-container>
 
-                            <button mat-flat-button *ngIf="editMode" color="warn" type="button" (click)="back()">Back</button>
-                            <button mat-flat-button *ngIf="!editMode && userCanEdit" color="primary" type="button" (click)="editTeam()">Edit</button>
-                            <button mat-flat-button color="warn" type="button" (click)="leaveTeam()">Leave</button>
-                            <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="inviteMember()">Invite</button>
-                            <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="addMember()">Add</button>
+                                                        <ng-container matColumnDef="summonerName">
+                                                            <th mat-header-cell *matHeaderCellDef> Summoner Name </th>
+                                                            <td mat-cell *matCellDef="let member">{{member.summonerName}}</td>
+                                                        </ng-container>
+
+                                                        <ng-container matColumnDef="status">
+                                                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                                                            <td mat-cell *matCellDef="let member">
+                                                                {{getRoleName(member)}}
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <ng-container matColumnDef="action">
+                                                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                            <td mat-cell *matCellDef="let member">
+                                                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                                                    <mat-icon>more_vert</mat-icon>
+                                                                </button>
+                                                                <mat-menu #menu="matMenu">
+                                                                    <button mat-menu-item>
+                                                                        <mat-icon>account_circle</mat-icon>
+                                                                        <span>View Profile</span>
+                                                                    </button>
+                                                                    <button mat-menu-item (click)="openDialog(member, team, 'status')">
+                                                                        <mat-icon>stars</mat-icon>
+                                                                        <span>Change Role</span>
+                                                                    </button>
+                                                                    <button mat-menu-item>
+                                                                        <mat-icon>remove_circle</mat-icon>
+                                                                        <span>Kick Member</span>
+                                                                    </button>
+                                                                </mat-menu>
+
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsTeams"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsTeams;"></tr>
+                                                    </table>
+                                                </mat-card-content>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="editMode">
+                                        <form #editTeamForm="ngForm" (ngSubmit)="onSubmitEditTeam(editTeamForm)">
+                                            <div class="row">
+                                                <mat-form-field>
+                                                    <mat-label>Team Name</mat-label>
+                                                    <input matInput type="text" name="name" #name="ngModel" [(ngModel)]="teamEdit.name" value={{teamEdit.name}}>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="row">
+                                                <mat-form-field>
+                                                    <mat-label>Team Tag</mat-label>
+                                                    <input matInput type="text" name="tag" #name="ngModel" [(ngModel)]="teamEdit.tag" value={{teamEdit.tag}}>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="row">
+                                                <mat-form-field>
+                                                    <mat-label>Team Logo</mat-label>
+                                                    <input matInput type="text" name="logo" #name="ngModel" [(ngModel)]="teamEdit.logo" value={{teamEdit.logo}}>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="row">
+                                                <button mat-flat-button color="primary" type="submit">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+        
+                                    <div *ngIf="inviteMemberMode">
+                                        <div class="row">
+
+                                            <mat-card>
+                                                <mat-card-header>
+                                                    <mat-card-title>Inviting</mat-card-title>
+                                                </mat-card-header>
+                                                <mat-card-content>
+                                                    <table mat-table [dataSource]="users">
+                                                        <ng-container matColumnDef="username">
+                                                            <th mat-header-cell *matHeaderCellDef>Username</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.username}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="role">
+                                                            <th mat-header-cell *matHeaderCellDef>Role</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.role.name}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="summonerName">
+                                                            <th mat-header-cell *matHeaderCellDef>Summoner Name</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.summonerName}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="position">
+                                                            <th mat-header-cell *matHeaderCellDef>Position</th>
+                                                            <td mat-cell *matCellDef="let user">Position</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="rank">
+                                                            <th mat-header-cell *matHeaderCellDef>Rank</th>
+                                                            <td mat-cell *matCellDef="let user">rank</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="action">
+                                                            <th mat-header-cell *matHeaderCellDef></th>
+                                                            <td mat-cell *matCellDef="let user">
+                                                                <button mat-icon-button (click)="openDialog(user, team, 'invite')">
+                                                                    <mat-icon>add_circle_outline</mat-icon>
+                                                                </button>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsInvite"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsInvite;"></tr>
+                                                    </table>
+                                                </mat-card-content>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+        
+                                    <div *ngIf="addMemberMode">
+                                        <div class="row">
+                                            <mat-card>
+                                                <mat-card-header>
+                                                    <mat-card-title>Recruiting</mat-card-title>
+                                                </mat-card-header>
+                                                <mat-card-content>
+                                                    <table mat-table [dataSource]="users">
+                                                        <ng-container matColumnDef="username">
+                                                            <th mat-header-cell *matHeaderCellDef>Username</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.username}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="role">
+                                                            <th mat-header-cell *matHeaderCellDef>Role</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.role.name}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="summonerName">
+                                                            <th mat-header-cell *matHeaderCellDef>Summoner Name</th>
+                                                            <td mat-cell *matCellDef="let user">{{user.summonerName}}</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="position">
+                                                            <th mat-header-cell *matHeaderCellDef>Position</th>
+                                                            <td mat-cell *matCellDef="let user">Position</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="rank">
+                                                            <th mat-header-cell *matHeaderCellDef>Rank</th>
+                                                            <td mat-cell *matCellDef="let user">rank</td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="invite">
+                                                            <th mat-header-cell *matHeaderCellDef></th>
+                                                            <td mat-cell *matCellDef="let user"></td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="action">
+                                                            <th mat-header-cell *matHeaderCellDef></th>
+                                                            <td mat-cell *matCellDef="let user">
+                                                                <button mat-icon-button (click)="openDialog(user, team, 'add')">
+                                                                    <mat-icon>add_circle_outline</mat-icon>
+                                                                </button>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsInvite"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsInvite;"></tr>
+                                                    </table>
+                                                </mat-card-content>
+                                            </mat-card>
+                                        </div>
+                                        <div>
+                                            <button mat-flat-button color="warn" (click)="back()">Back</button>
+                                            <button mat-flat-button color="primary" (click)="confirmAddMember()">Confirm</button>
+                                        </div>
+                                    </div>
+                                    <button mat-flat-button *ngIf="editMode" color="warn" type="button" (click)="back()">Back</button>
+                                    <button mat-flat-button *ngIf="!editMode && userCanEdit" color="primary" type="button" (click)="editTeam()">Edit</button>
+                                    <button mat-flat-button color="warn" type="button" (click)="leaveTeam()">Leave</button>
+                                    <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="inviteMember()">Invite</button>
+                                    <button mat-flat-button *ngIf="userCanEdit" color="primary" type="button" (click)="addMember()">Add</button>
+                                </mat-tab>
+                                <mat-tab label="History">
+                                    <div class="row">
+                                        <mat-card>
+                                            <mat-card-header>
+                                                <mat-card-title>Tournament History</mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-content>
+                                                <table mat-table [dataSource]="tournaments">
+                                                    <ng-container matColumnDef="name">
+                                                        <th mat-header-cell *matHeaderCellDef>  Name  </th>
+                                                        <td mat-cell *matCellDef="let tournament" (click)="testClick()"></td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="place">
+                                                        <th mat-header-cell *matHeaderCellDef>  Place  </th>
+                                                        <td mat-cell *matCellDef="let tournament"></td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="date">
+                                                        <th mat-header-cell *matHeaderCellDef> Date </th>
+                                                        <td mat-cell *matCellDef="let tournament"></td>
+                                                    </ng-container>
+                                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsTourn"></tr>
+                                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsTourn;"></tr>
+                                                </table>
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </div>
+                                    <div class="row">
+                                        <mat-card>
+                                            <mat-card-header>
+                                                <mat-card-title>Match History</mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-content>
+                                                <table mat-table [dataSource]="matches">
+                                                    <ng-container matColumnDef="name">
+                                                        <th mat-header-cell *matHeaderCellDef>  Name  </th>
+                                                        <td mat-cell *matCellDef="let match" (click)="testClick()"></td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="score">
+                                                        <th mat-header-cell *matHeaderCellDef>  Score  </th>
+                                                        <td mat-cell *matCellDef="let match"></td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="tournament">
+                                                        <th mat-header-cell *matHeaderCellDef> Date </th>
+                                                        <td mat-cell *matCellDef="let match"></td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="date">
+                                                        <th mat-header-cell *matHeaderCellDef> Date </th>
+                                                        <td mat-cell *matCellDef="let match"></td>
+                                                    </ng-container>
+                                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsMatch"></tr>
+                                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsMatch;"></tr>
+                                                </table>
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="Notifications">
+
+                                </mat-tab>
+                            </mat-tab-group>
                         </div>
-
-                        
-                        
                         <button mat-flat-button color="accent" type="button" (click)="home()">Home</button>
                     </div>
 

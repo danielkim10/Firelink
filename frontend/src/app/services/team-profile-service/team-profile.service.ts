@@ -5,7 +5,7 @@ export interface User {
   _id: String;
   username: String;
   role: String;
-  teamID: String;
+  teamID: any;
 }
 
 export interface Team {
@@ -13,8 +13,8 @@ export interface Team {
   name: String;
   tag: String;
   logo: String;
-  owner: String;
-  managers: Array<String>;
+  owner: any;
+  managers: Array<any>;
   playerRoster: Array<String>;
   coachRoster: Array<String>;
   active: Boolean;
@@ -29,6 +29,18 @@ export interface Role {
   name: String;
 }
 
+export interface Invite {
+  sender: any;
+  onSender: String;
+  recipient: any;
+  onRecipient: String;
+  date: Date;
+  subject: String;
+  message: String;
+  responseReceived: Boolean;
+  opened: Boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -38,6 +50,10 @@ export class TeamProfileService {
 
   getUser(id: String) {
     return this.httpClient.get(this.baseUrl + '/users/' + id);
+  }
+
+  getUsers(ids: Array<String>) {
+    return this.httpClient.post(this.baseUrl + '/users/getUsersWithIds', ids);
   }
 
   getFreeAgents() {
@@ -80,8 +96,20 @@ export class TeamProfileService {
     return this.httpClient.put(this.baseUrl + '/teams/addMember/' + object.team._id, object);
   }
 
-  inviteMember() {
+  createInviteForUser(object: any) {
+    return this.httpClient.post(this.baseUrl + '/invite/', object);
+  }
 
+  teamSendsInvite(object: any) {
+    return this.httpClient.put(this.baseUrl + '/teams/createInviteForTeam/' + object.team._id, object);
+  }
+
+  userReceivesTeamInvite(object: any) {
+    return this.httpClient.put(this.baseUrl + '/users/receiveInviteFromTeam/' + object.user._id, object);
+  }
+
+  changeStatus(object: any) {
+    return this.httpClient.put(this.baseUrl + '/teams/promote/' + object.team._id, object);
   }
 
   disbandTeam(team: Team) {

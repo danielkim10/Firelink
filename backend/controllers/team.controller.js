@@ -2,7 +2,7 @@ const express = require('express');
 var router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
-var { Team } = require('../models/team');
+var Team = require('../models/team');
 
 //#region Get
 
@@ -22,7 +22,13 @@ router.get('/:id', (req, res) => {
   Team.findById(req.params.id, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
-  });
+  }).populate('owner').populate('managers').populate({ path: 'playerRoster', populate: { path: 'role' }}).populate('coachRoster')
+    .populate('matchHistory').populate('tournamentHistory').exec((err, team) => {
+      if (err) return handleError(err);
+
+
+
+    });
 });
 
 //#endregion
@@ -31,31 +37,35 @@ router.get('/:id', (req, res) => {
 
 // create new team
 router.post('/', (req, res) => {
-  let playerRoster = [];
-  let coachRoster = [];
-  /*if (req.body.user.role === req.body.roles[0]._id) {
-    playerRoster.push(req.body.user._id);
+  req.setTimeout(5*1000);
+  //let playerRoster = [];
+  //let coachRoster = [];
+  if (req.body.user.role.name === 'Player') {
+    req.body.team.playerRoster.push(req.body.user._id);
   }
-  else if (req.body.user.role === req.body.roles[1]._id) {
-    coachRoster.push(req.body.user._id);
-  }*/
+  else if (req.body.user.role.name === 'Coach') {
+    req.body.team.coachRoster.push(req.body.user._id);
+  }
+
+  req.body.team.owner = req.body.user._id;
 
   var team = new Team({
     name: req.body.team.name,
     tag: req.body.team.tag,
-    logo: req.body.team.logo,
     owner: req.body.team.owner,
-    playerRoster: req.body.playerRoster,
-    coachRoster: req.body.coachRoster,
+    managers: req.body.team.managers,
+    playerRoster: req.body.team.playerRoster,
+    coachRoster: req.body.team.coachRoster,
     active: true,
     matchHistory: req.body.team.matchHistory,
     tournamentHistory: req.body.team.tournamentHistory,
     activelyRecruiting: req.body.team.activelyRecruiting,
     dateCreated: new Date(),
   });
+
   team.save((err, doc) => {
-    if (!err) { res.send(doc); }
-    else { console.log('Error creating team: ' + JSON.stringify(err, undefined, 2)); }
+    if (!err) res.send(doc);
+    else console.log('Error in creating team: ' + JSON.stringify(err, undefined, 2));
   });
 });
 
@@ -71,8 +81,8 @@ router.post('/getTeamsWithIds', (req, res) => {
   Team.find({_id: req.body}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
-  })
-})
+  });
+});
 
 //#endregion
 
@@ -114,13 +124,21 @@ router.put('/promoteToOwner', (req, res) => {
 
 //promote/demote a member
 router.put('/promote/:id', (req, res) => {
-  if (!ObjectId.isvalid(req.params.id)) {
+  if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   }
 
+  if (req.body.status === 'Manager') {
+    req.body.team.managers.push(req.body.user._id);
+    console.log(req.body.team.managers);
+  }
+  else if (req.body.status === 'Member') {
+
+  }
+
   var team = {
-    owner: req.body.id,
-    managers: req.body.managers,
+    owner: req.body.team.owner._id,
+    managers: req.body.team.managers,
   }
 
   Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {
@@ -166,6 +184,7 @@ router.put('/disband/:id', (req, res) => {
 
   var team = {
     owner: '',
+    managers: [],
     playerRoster: [],
     coachRoster: [],
     active: false,
@@ -182,19 +201,33 @@ router.put('/addMember/:id', (req, res) => {
     return res.status(400).send(`No team with given id: ${req.params.id}`);
   }
 
-  let playerRoster = req.body.team.playerRoster;
-  let coachRoster = req.body.team.coachRoster;
-
-  if (req.body.user.role === '5ffa8ebbc3ba6336cc5591ee') {
-    playerRoster.push(req.body.user._id);
+  if (req.body.user.role.name === 'Player') {
+    req.body.team.playerRoster.push(req.body.user._id);
   }
-  else if (req.body.user.role === '5ffa8ec2c3ba6336cc5591ef') {
-    coachRoster.push(req.body.user._id);
+  else if (req.body.user.role.name === 'Coach') {
+    req.body.team.coachRoster.push(req.body.user._id);
   }
 
   var team = {
-    playerRoster: playerRoster,
-    coachRoster: coachRoster,
+    playerRoster: req.body.team.playerRoster,
+    coachRoster: req.body.team.coachRoster,
+  }
+
+  Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {
+    if (!err) res.send(doc);
+    else { console.log('Error updating team: ' + JSON.stringify(err, undefined, 2))}
+  });
+});
+
+router.put('/createInviteForTeam/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send(`No invite with given id: ${req.params.id}`);
+  }
+  
+  req.body.team.outgoingInvites.push(req.body.invite._id);
+
+  var team = {
+    outgoingInvites: req.body.team.outgoingInvites,
   }
 
   Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {

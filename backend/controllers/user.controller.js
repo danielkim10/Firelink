@@ -22,6 +22,10 @@ router.get('/:id', (req, res) => {
   User.findById(req.params.id, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving user: ' + JSON.stringify(err, undefined, 2));
+  }).populate('role').populate('teamID').populate('previousTeamIDs')
+    .populate('recentTournaments').populate('recentMatches')
+    .populate('incomingNotifications').populate('incomingInvites').exec((err, user) => {
+    if (err) return handleError(err);
   });
 });
 
@@ -30,7 +34,14 @@ router.get('/:id', (req, res) => {
 //#region Post
 
 router.post('/noTeam', (req, res) => {
-  User.find({teamID: '', freeAgent: true}, (err, doc) => {
+  User.find({teamID: null, freeAgent: true}, (err, doc) => {
+    if (!err) res.send(doc);
+    else console.log('Error in retrieving users: ' + JSON.stringify(err, undefined, 2));
+  }).populate('role');
+});
+
+router.post('/getUsersWithIds', (req, res) => {
+  User.find({_id: req.body}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving users: ' + JSON.stringify(err, undefined, 2));
   });
@@ -58,12 +69,29 @@ router.put('/:id', (req, res) => {
   });
 });
 
+router.put('/receiveInviteFromTeam/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No user with given id: ${req.params.id}`);
+  
+  req.body.user.incomingInvites.push(req.body.invite._id);
+
+  var user = {
+    incomingInvites: req.body.user.incomingInvites
+  }
+
+  User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+})
+
 // add user to team
 router.put('/addToTeam/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   var user = {
     teamID: req.body.teamID,
+    freeAgent: false,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }

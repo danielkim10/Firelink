@@ -17,24 +17,20 @@ export class UserProfileComponent implements OnInit {
     _id: '',
     username: '',
     email: '',
-    role: '',
+    role: null,
     description: '',
     summonerName: '',
     displayName: '',
-    teamID: '',
+    teamID: null,
     previousTeamIDs: [],
     recentTournaments: [],
     recentMatches: [],
+    incomingInvites: [],
     active: true,
     freeAgent: false,
   };
 
   userEdit: User;
-
-  role: Role = {
-    _id: '',
-    name: '',
-  };
 
   team: Team = {
     _id: '',
@@ -49,6 +45,11 @@ export class UserProfileComponent implements OnInit {
   tournaments: Array<any>;
   matches: Array<any>;
   notifications: Array<any>;
+  invites: Array<any>;
+
+  displayedColumnsTeams: string[] = [];
+  displayedColumnsTourn: string[] = [];
+  displayedColumnsMatch: string[] = [];
 
   constructor(private router: Router, private authenticationService: AuthenticationService, private userProfileService: UserProfileService) { }
 
@@ -61,30 +62,21 @@ export class UserProfileComponent implements OnInit {
 
     this.userProfileService.getUser(userDetails._id).subscribe((userData: User) => {
       this.user = userData;
+      console.log(this.user);
 
-      this.userProfileService.getRole(userData.role).subscribe((roleData: Role) => {
-        this.role = roleData;
+      this.userProfileService.getAdminRoles(false).subscribe((adminRoles: [Role]) => {
+        this.roles = adminRoles;
 
-        this.userProfileService.getAdminRoles(false).subscribe((adminRoles: [Role]) => {
-          this.roles = adminRoles;
-          
-          
-          this.userProfileService.getTeam(userData.teamID).subscribe((teamData: Team) => {
-            this.team = teamData;
-
-            this.userProfileService.getTeams(userData.previousTeamIDs).subscribe((teamsData: Array<Team>) => {
-              this.teams = teamsData;
-              console.log(teamsData);
-            });
-          });
-          
-        });
+        this.displayedColumnsTeams.push('name');
+        this.displayedColumnsTourn.push('name');
+        this.displayedColumnsMatch.push('name');
       });
     });
   }
 
   editProfile() {
     this.userEdit = Object.assign({}, this.user);
+    console.log(this.userEdit);
     this.editMode = true;
   }
 

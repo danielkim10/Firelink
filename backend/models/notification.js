@@ -3,14 +3,9 @@ const mongoose = require('mongoose');
 
 var Notification = mongoose.model('Notification', {
     sender: String,
-    recipient: String,
+    recipients: [String],
     date: Date,
-    dateRead: Date,
     type: String,
-    teamID: String,
-    tournamentID: String,
-    userID: String,
-    subject: String,
     message: String,
 });
 

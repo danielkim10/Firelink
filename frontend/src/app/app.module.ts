@@ -13,8 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -22,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TeamProfileComponent } from './components/team-profile/team-profile.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
 import { TeamSearchComponent } from './components/team-search/team-search.component';
+import { TeamProfileDialogComponent } from './components/team-profile-dialog/team-profile-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,8 @@ import { TeamSearchComponent } from './components/team-search/team-search.compon
     HomeComponent,
     TeamProfileComponent,
     UserSearchComponent,
-    TeamSearchComponent
+    TeamSearchComponent,
+    TeamProfileDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -43,8 +48,11 @@ import { TeamSearchComponent } from './components/team-search/team-search.compon
     MatCardModule,
     MatCheckboxModule,
     MatDatepickerModule,
+    MatDialogModule,
+    MatIconModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatSelectModule,
     MatTableModule,
     MatTabsModule,

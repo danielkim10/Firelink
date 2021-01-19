@@ -14,6 +14,7 @@ var roleController = require('./controllers/role.controller');
 var teamController = require('./controllers/team.controller');
 var tournamentController = require('./controllers/tournament.controller');
 var userController = require('./controllers/user.controller');
+var inviteController = require('./controllers/invite.controller');
 var routesApi = require('./authentication/index');
 
 var app = express();
@@ -29,6 +30,7 @@ app.use('/roles', roleController);
 app.use('/teams', teamController);
 app.use('/tournaments', tournamentController);
 app.use('/users', userController);
+app.use('/invite', inviteController);
 app.use('/auth', routesApi);
 
 app.use((err, req, res, next) => {
