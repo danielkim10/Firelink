@@ -1,3 +1,28 @@
 .required {
     color: red;
 }
+
+.drawer {
+    min-height: 800px;
+}
+
+.drawer-side {
+    min-width: 150px;
+}
+
+.drawer-content {
+    margin: 10px;
+    display: flex;
+}
+
+.default-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-item{
+    border-top: 1px;
+    border-bottom: 1px;
+    border-color: black;
+}

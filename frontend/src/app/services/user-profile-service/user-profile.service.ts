@@ -17,6 +17,7 @@ export interface User {
   previousTeamIDs: Array<any>,
   recentTournaments: Array<any>,
   recentMatches: Array<any>,
+  incomingNotifications: Array<any>,
   incomingInvites: Array<any>,
   active: Boolean,
   freeAgent: Boolean,
@@ -34,6 +35,16 @@ export interface Team {
   logo: String,
   owner: String,
   managers: Array<String>,
+}
+
+export interface Invite {
+  _id: String,
+  sender: any,
+  recipient: any,
+  subject: String,
+  message: String,
+  responseReceived: Boolean,
+  opened: Boolean,
 }
 
 @Injectable({
@@ -79,5 +90,21 @@ export class UserProfileService {
 
   deactivateUser(user: User) {
     return this.httpClient.put(this.baseUrl + '/users/deactivate/' + user._id, user);
+  }
+
+  inviteOpened(inviteId: String) {
+    return this.httpClient.put(this.baseUrl + '/invite/inviteOpened/' + inviteId, null);
+  }
+
+  inviteResponse(inviteId: String) {
+    return this.httpClient.put(this.baseUrl + '/invite/inviteResponse/' + inviteId, null);
+  }
+
+  deleteIncomingInvite(object: any) {
+    return this.httpClient.put(this.baseUrl + '/users/deleteIncomingInvite/' + object.user._id, object);
+  }
+
+  deleteOutgoingInvite(object: any) {
+    return this.httpClient.put(this.baseUrl + '/teams/deleteOutgoingInvite/' + object.team._id, object);
   }
 }

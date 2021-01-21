@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 var User = require('./user');
 var Tournament = require('./tournament');
 var Match = require('./match');
+var Notification = require('./notification');
+var Invite = require('./invite');
 
 var teamSchema = new Schema({
   name: String,
@@ -18,6 +20,10 @@ var teamSchema = new Schema({
   tournamentHistory: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   activelyRecruiting: Boolean,
   dateCreated: Date,
+  incomingNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+  incomingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
+  outgoingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite '}],
+  incomingApplications: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
 });
 
 const Team = mongoose.model('Team', teamSchema);

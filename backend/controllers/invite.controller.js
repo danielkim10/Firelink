@@ -63,6 +63,34 @@ router.put('/:id', (req, res) => {
     });
 });
 
+router.put('/inviteOpened/:id', (req, res) => {
+    if (!ObjectId.isValid(req.params.id))
+        return res.status(400).send(`No invite with given id: ${req.params.id}`);
+
+    var invite = {
+        opened: true,
+    }
+
+    Invite.findByIdAndUpdate(req.params.id, { $set: invite }, { new: true }, (err, doc) => {
+        if (!err) { res.send(doc); }
+        else { console.log('Error updating invite: ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
+router.put('/inviteResponse/:id', (req, res) => {
+    if (!ObjectId.isValid(req.params.id))
+        return res.status(400).send(`No invite with given id: ${req.params.id}`);
+    
+    var invite = {
+        responseReceived: true,
+    }
+
+    Invite.findByIdAndUpdate(req.params.id, { $set: invite }, { new: true }, (err, doc) => {
+        if (!err) { res.send(doc); }
+        else { console.log('Error updating invite: ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
 //#endregion
 
 //#region Delete

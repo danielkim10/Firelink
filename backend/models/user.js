@@ -23,6 +23,7 @@ var userSchema = new Schema({
   recentMatches: [{ type: Schema.Types.ObjectId, ref: 'Match' }],
   incomingNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
   incomingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
+  outgoingApplications: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
   active: Boolean,
   freeAgent: Boolean,
   hash: String,

@@ -236,6 +236,23 @@ router.put('/createInviteForTeam/:id', (req, res) => {
   });
 });
 
+router.put('/deleteOutgoingInvite/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send(`No invite with given id: ${req.params.id}`);
+  }
+
+  req.body.team.outgoingInvites.splice(req.body.team.outgoingInvites.indexOf(req.body.team.outgoingInvites.find(e => e._id === req.body.invite._id)), 1);
+
+  var team = {
+    outgoingInvites: req.body.team.outgoingInvites,
+  }
+
+  Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {
+    if (!err) res.send(doc);
+    else { console.log('Error updating team: ' + JSON.stringify(err, undefined, 2))}
+  });
+});
+
 //#endregion
 
 //#region Delete

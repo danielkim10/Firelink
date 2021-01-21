@@ -83,7 +83,26 @@ router.put('/receiveInviteFromTeam/:id', (req, res) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
   });
-})
+});
+
+router.put('/deleteIncomingInvite/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No user with given id: ${req.params.id}`);
+  
+  req.body.user.incomingInvites.splice(req.body.user.incomingInvites.indexOf(req.body.user.incomingInvites.find(e => e._id === req.body.invite._id)), 1);
+
+  console.log('a');
+  console.log(req.body.user.incomingInvites);
+
+  var user = {
+    incomingInvites: req.body.user.incomingInvites
+  }
+
+  User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
 
 // add user to team
 router.put('/addToTeam/:id', (req, res) => {

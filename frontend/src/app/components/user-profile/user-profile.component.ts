@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserProfileService, User, Role, Team } from '../../services/user-profile-service/user-profile.service';
+import { UserProfileService, User, Role, Team, Invite } from '../../services/user-profile-service/user-profile.service';
 import { AuthenticationService } from '../../services/authentication-service/authentication.service';
 
 @Component({
@@ -25,6 +25,7 @@ export class UserProfileComponent implements OnInit {
     previousTeamIDs: [],
     recentTournaments: [],
     recentMatches: [],
+    incomingNotifications: [],
     incomingInvites: [],
     active: true,
     freeAgent: false,
@@ -46,6 +47,7 @@ export class UserProfileComponent implements OnInit {
   matches: Array<any>;
   notifications: Array<any>;
   invites: Array<any>;
+  selectedInvite: String;
 
   displayedColumnsTeams: string[] = [];
   displayedColumnsTourn: string[] = [];
@@ -105,6 +107,27 @@ export class UserProfileComponent implements OnInit {
 
   getOfficialData() {
 
+  }
+
+  markInviteAsOpened() {
+    this.userProfileService.inviteOpened(this.selectedInvite).subscribe((res) => {
+
+    });
+  }
+
+  acceptInvite(invite: Invite) {
+    this.userProfileService.inviteResponse(invite._id).subscribe((res) => {
+      
+    });
+  }
+
+  declineInvite(invite: Invite) {
+    this.userProfileService.inviteResponse(invite._id).subscribe((res) => {
+      this.userProfileService.deleteIncomingInvite({invite: invite, user: this.user}).subscribe((res) => {
+        this.userProfileService.deleteOutgoingInvite({invite: invite, team: this.team}).subscribe((res) => {
+        });
+      });
+    });
   }
 
 }
