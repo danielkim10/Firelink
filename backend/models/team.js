@@ -6,7 +6,7 @@ var Tournament = require('./tournament');
 var Match = require('./match');
 var Notification = require('./notification');
 var Invite = require('./invite');
-//xd
+
 var teamSchema = new Schema({
   name: String,
   tag: String,
