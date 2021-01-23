@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { TeamProfileService, User, Team, Role } from '../../services/team-profile-service/team-profile.service';
+import { TeamProfileService } from '../../services/team-profile-service/team-profile.service';
+import { UserService } from '../../services/user-service/user.service';
+import { TeamService } from '../../services/team-service/team.service';
+import { RoleService } from '../../services/role-service/role.service';
+import { InviteService } from '../../services/invite-service/invite.service';
+import { User, Role, Team, Invite } from '../../services/models';
 import { TeamProfileDialogComponent } from '../team-profile-dialog/team-profile-dialog.component';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
 
@@ -27,8 +32,19 @@ export class TeamProfileComponent implements OnInit {
   user: User = {
     _id: '',
     username: '',
+    email: '',
     role: null,
+    description: '',
+    summonerName: '',
+    displayName: '',
     teamID: null,
+    previousTeamIDs: [],
+    recentTournaments: [],
+    recentMatches: [],
+    incomingNotifications: [],
+    incomingInvites: [],
+    active: true,
+    freeAgent: false,
   };
   team: Team = {
     _id: '',
@@ -44,14 +60,29 @@ export class TeamProfileComponent implements OnInit {
     tournamentHistory: [],
     activelyRecruiting: false,
     dateCreated: null,
+    incomingNotifications: [],
+    incomingInvites: [],
+    outgoingInvites: [],
+    incomingApplications: [],
   };
 
   teamEdit: Team;
   selectedUser: User = {
     _id: '',
     username: '',
-    role: '',
-    teamID: '',
+    email: '',
+    role: null,
+    description: '',
+    summonerName: '',
+    displayName: '',
+    teamID: null,
+    previousTeamIDs: [],
+    recentTournaments: [],
+    recentMatches: [],
+    incomingNotifications: [],
+    incomingInvites: [],
+    active: true,
+    freeAgent: false,
   };
   users: Array<User> = [];
 
@@ -59,7 +90,9 @@ export class TeamProfileComponent implements OnInit {
   tournaments: Array<any> = [];
   matches: Array<any> = [];
 
-  constructor(private router: Router, private authenticationService: AuthenticationService, private teamProfileService: TeamProfileService, public dialog: MatDialog) { }
+  constructor(private router: Router, private authenticationService: AuthenticationService, private teamProfileService: TeamProfileService, public dialog: MatDialog,
+    private userService: UserService, private teamService: TeamService, private roleService: RoleService, private inviteService: InviteService
+    ) { }
 
   ngOnInit(): void {
     this.userDetails = this.authenticationService.getUserDetails();
@@ -68,14 +101,14 @@ export class TeamProfileComponent implements OnInit {
 
   update(userDetails: UserDetails) {
     this.members = [];
-    this.teamProfileService.getUser(userDetails._id).subscribe((userData: User) => {
+    this.userService.getUser(userDetails._id).subscribe((userData: User) => {
       this.user = userData;
 
-      this.teamProfileService.getAdminRoles(false).subscribe((roleData: [Role]) => {
+      this.roleService.getAdminRoles(false).subscribe((roleData: [Role]) => {
         this.roles = roleData;
         console.log(userData.teamID._id);
         if (userData.teamID !== null) {
-          this.teamProfileService.getTeam(userData.teamID._id).subscribe((teamData: Team) => {
+          this.teamService.getTeam(userData.teamID._id).subscribe((teamData: Team) => {
             this.team = teamData;
             console.log(this.team);
             for (let player in teamData.playerRoster) {
@@ -85,11 +118,11 @@ export class TeamProfileComponent implements OnInit {
               this.members.push(teamData.coachRoster[coach]);
             }
             console.log(this.members);
-            if (this.team.owner._id === this.user._id || this.team.managers.includes(this.user._id)) {
+            if (this.team.owner._id === this.user._id || this.team.managers.includes(this.user)) {
               this.userCanEdit = true;
             }
 
-            this.teamProfileService.getFreeAgents().subscribe((users: [User]) => {
+            this.userService.getFreeAgents().subscribe((users: [User]) => {
               this.users = users;
               console.log(this.users);
 
@@ -113,10 +146,10 @@ export class TeamProfileComponent implements OnInit {
   }
 
   onSubmitCreateTeam(form: NgForm) {
-    this.teamProfileService.createTeam({ team: this.team, user: this.user }).subscribe((teamData: Team) => {
-      this.user.teamID = teamData._id;
+    this.teamService.createTeam({ team: this.team, user: this.user }).subscribe((teamData: Team) => {
+      this.user.teamID = teamData;
       console.log(teamData._id);
-      this.teamProfileService.updateUser(this.user).subscribe((userData: User) => {
+      this.userService.addToTeam(this.user).subscribe((userData: User) => {
         
         this.createMode = false;
         this.update(this.userDetails);
@@ -127,7 +160,7 @@ export class TeamProfileComponent implements OnInit {
   }
 
   onSubmitEditTeam(form: NgForm) {
-    this.teamProfileService.editTeam(this.teamEdit).subscribe((res) => {
+    this.teamService.editTeam(this.teamEdit).subscribe((res) => {
       this.editMode = false;
       this.update(this.userDetails);
     }, (err) => {
@@ -149,8 +182,8 @@ export class TeamProfileComponent implements OnInit {
   }
 
   leaveTeam() {
-    this.teamProfileService.leaveTeam({team: this.team, user: this.user}).subscribe((res) => {
-      this.teamProfileService.removeFromTeam(this.user).subscribe((res1) => {
+    this.teamService.leaveTeam({team: this.team, user: this.user}).subscribe((res) => {
+      this.userService.removeFromTeam(this.user).subscribe((res1) => {
         console.log(res1);
         this.update(this.userDetails);
       });
@@ -158,7 +191,7 @@ export class TeamProfileComponent implements OnInit {
   }
 
   disbandTeam() {
-    this.teamProfileService.disbandTeam(this.team).subscribe((res) => {
+    this.teamService.disbandTeam(this.team).subscribe((res) => {
       console.log(res);
     });
 
@@ -174,13 +207,13 @@ export class TeamProfileComponent implements OnInit {
   onNgModelChange(event) {
     this.selectedUser._id = event[0]._id;
     this.selectedUser.role = event[0].role;
-    this.selectedUser.teamID = this.team._id;
+    this.selectedUser.teamID = this.team;
     console.log(this.selectedUser._id);
   }
 
   confirmAddMember() {
-     this.teamProfileService.addMember({team: this.team, user: this.selectedUser}).subscribe((res) => {
-      this.teamProfileService.updateUser(this.selectedUser).subscribe((res) => {
+     this.teamService.addMember({team: this.team, user: this.selectedUser}).subscribe((res) => {
+      this.userService.addToTeam(this.selectedUser).subscribe((res) => {
         this.addMemberMode = false;
         this.update(this.userDetails);
       }, (err1) => {

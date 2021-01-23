@@ -48,6 +48,24 @@ export class TeamProfileService {
   readonly baseUrl='http://localhost:3000';
   constructor(private httpClient: HttpClient) { }
 
+  //#region Users
+  //#endregion
+
+  //#region Teams
+  //#endregion
+
+  //#region Roles
+  //#endregion
+
+  //#region Tournaments
+  //#endregion
+
+  //#region Notifications
+  //#endregion
+
+  //#region Invites
+  //#endregion
+
   getUser(id: String) {
     return this.httpClient.get(this.baseUrl + '/users/' + id);
   }

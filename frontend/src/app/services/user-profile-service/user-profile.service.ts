@@ -34,7 +34,8 @@ export interface Team {
   tag: String,
   logo: String,
   owner: String,
-  managers: Array<String>,
+  managers: Array<any>,
+  outgoingInvites: Array<any>,
 }
 
 export interface Invite {
@@ -55,6 +56,7 @@ export class UserProfileService {
   userProfile: UserProfile;
   user: User;
   constructor(private httpClient: HttpClient) { }
+
 
   getUser(id: String) {
     return this.httpClient.get(this.baseUrl + '/users/' + id);
