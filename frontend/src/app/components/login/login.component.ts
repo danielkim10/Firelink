@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { LoginService } from '../../services/login-service/login.service';
 import { AuthenticationService, TokenPayload } from '../../services/authentication-service/authentication.service';
 
 @Component({

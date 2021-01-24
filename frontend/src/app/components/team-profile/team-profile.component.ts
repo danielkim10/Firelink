@@ -6,6 +6,7 @@ import { UserService } from '../../services/user-service/user.service';
 import { TeamService } from '../../services/team-service/team.service';
 import { RoleService } from '../../services/role-service/role.service';
 import { InviteService } from '../../services/invite-service/invite.service';
+import { NotificationService } from '../../services/notification-service/notification.service';
 import { User, Role, Team, Invite } from '../../services/models';
 import { TeamProfileDialogComponent } from '../team-profile-dialog/team-profile-dialog.component';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
@@ -90,7 +91,8 @@ export class TeamProfileComponent implements OnInit {
   matches: Array<any> = [];
 
   constructor(private router: Router, private authenticationService: AuthenticationService, public dialog: MatDialog,
-    private userService: UserService, private teamService: TeamService, private roleService: RoleService, private inviteService: InviteService
+    private userService: UserService, private teamService: TeamService, private roleService: RoleService, private inviteService: InviteService,
+    private notificationService: NotificationService
     ) { }
 
   ngOnInit(): void {
