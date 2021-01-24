@@ -29,8 +29,8 @@ export class UserService {
     return this.httpClient.put(this.baseUrl + user._id, user);
   }
 
-  addToTeam(user: User) {
-    return this.httpClient.put(this.baseUrl + 'addToTeam/' + user._id, user);
+  addToTeam(object: any) {
+    return this.httpClient.put(this.baseUrl + 'addToTeam/' + object.user._id, object);
   }
 
   removeFromTeam(user: User) {

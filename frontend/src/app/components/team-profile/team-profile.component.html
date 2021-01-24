@@ -300,7 +300,51 @@
                                     </div>
                                 </mat-tab>
                                 <mat-tab label="Notifications">
-
+                                    <div class="row">
+                                        <mat-drawer-container class="drawer" autosize>
+                                            <mat-drawer mode="side" opened>
+                                                <mat-tab-group>
+                                                    <mat-tab label="Notifications">
+                                                        <mat-selection-list #notifications [multiple]="false">
+                                                            <mat-list-option *ngFor="let notification of team.incomingNotifications" [value]="notification">
+                                                                <h3 matLine>{{notification.title}}</h3>
+                                                                <p matLine>{{notification.body}}</p>
+                                                            </mat-list-option>
+                                                        </mat-selection-list>
+                                                    </mat-tab>
+                                                    <mat-tab label="Outgoing Invites">
+                                                        <mat-selection-list #incomingInvites [multiple]="false">
+                                                            <mat-list-option *ngFor="let invite of team.incomingInvites" [value]="invite">
+                                                                <h3 matLine>{{invite.subject}}</h3>
+                                                                <p matLine>{{invite.message}}</p>
+                                                            </mat-list-option>
+                                                        </mat-selection-list>
+                                                    </mat-tab>
+                                                    <mat-tab label="Incoming Invites">
+                                                        <mat-selection-list #outgoingInvites [multiple]="false">
+                                                            <mat-list-option *ngFor="let invite of team.outgoingInvites" [value]="invite">
+                                                                <h3 matLine>{{invite.subject}}</h3>
+                                                                <p matLine>{{invite.message}}</p>
+                                                            </mat-list-option>
+                                                        </mat-selection-list>
+                                                    </mat-tab>
+                                                    <mat-tab label="Applications">
+                                                        <mat-selection-list #incomingApplications>
+                                                            <mat-list-option *ngFor="let application of team.incomingApplications" [value]="application">
+                                                                <h3 matLine>{{application.subject}}</h3>
+                                                                <p matLine>{{application.message}}</p>
+                                                            </mat-list-option>
+                                                        </mat-selection-list>
+                                                    </mat-tab>
+                                                </mat-tab-group>
+                                            </mat-drawer>
+                                            <mat-drawer-content class="drawer-content">
+                                                <div class="row default-text">
+                                                    aaaaaa
+                                                </div>
+                                            </mat-drawer-content>
+                                        </mat-drawer-container>
+                                    </div>
                                 </mat-tab>
                             </mat-tab-group>
                         </div>

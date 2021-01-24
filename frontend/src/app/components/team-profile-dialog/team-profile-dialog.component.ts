@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TeamProfileService, Invite } from '../../services/team-profile-service/team-profile.service';
-import { TeamProfileDialogService } from '../../services/team-profile-dialog-service/team-profile-dialog.service';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
-
-import  User from '../../../../../backend/models/user';
-import Team from '../../../../../backend/models/team';
+import { TeamService } from '../../services/team-service/team.service';
+import { UserService } from '../../services/user-service/user.service';
+import { InviteService } from '../../services/invite-service/invite.service';
+import { User, Team, Invite } from '../../services/models';
 
 export interface DialogData {
   type: String,
@@ -23,6 +22,7 @@ export class TeamProfileDialogComponent implements OnInit {
   status: String = '';
   statuses: Array<String> = ['Member', 'Manager', 'Owner'];
   invite: Invite = {
+    _id: '',
     sender: null,
     onSender: '',
     recipient: null,
@@ -34,7 +34,7 @@ export class TeamProfileDialogComponent implements OnInit {
     opened: false,
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData, private teamProfileService: TeamProfileService, private teamProfileDialogService: TeamProfileDialogService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData, private userService: UserService, private teamService: TeamService, private inviteService: InviteService) { }
 
   ngOnInit(): void {
     if (this.data.member._id === this.data.team.owner._id) {
@@ -50,21 +50,22 @@ export class TeamProfileDialogComponent implements OnInit {
 
   confirmAction(type: String) {
     if (type === 'add') {
-      this.teamProfileDialogService.addMember({team: this.data.team, user: this.data.member}).subscribe((res) => {
-        this.teamProfileDialogService.updateUser(this.data.member).subscribe((res) => {
+      this.teamService.addMember({team: this.data.team, user: this.data.member}).subscribe((res) => {
+        console.log(this.data.member);
+        this.userService.addToTeam({team: this.data.team, user: this.data.member}).subscribe((res) => {
 
         });
       });
     }
     else if (type === 'status') {
-      this.teamProfileService.changeStatus({team: this.data.team, user: this.data.member, status: this.status}).subscribe((res) => {
+      this.teamService.changeStatus({team: this.data.team, user: this.data.member, status: this.status}).subscribe((res) => {
 
       });
     }
     else if (type === 'invite') {
-      this.teamProfileService.createInviteForUser({ invite: this.invite, senderId: this.data.team._id, recipientId: this.data.member._id }).subscribe((inviteData: Invite) => {
-        this.teamProfileService.teamSendsInvite({ team: this.data.team, invite: inviteData }).subscribe((res) => {
-          this.teamProfileService.userReceivesTeamInvite({ user: this.data.member, invite: inviteData }).subscribe((res1) => {
+      this.inviteService.createInviteForUser({ invite: this.invite, senderId: this.data.team._id, recipientId: this.data.member._id }).subscribe((inviteData: Invite) => {
+        this.teamService.teamSendsInvite({ team: this.data.team, invite: inviteData }).subscribe((res) => {
+          this.userService.receiveTeamInvite({ user: this.data.member, invite: inviteData }).subscribe((res1) => {
 
           });
         });

@@ -153,15 +153,15 @@ router.put('/leave/:id', (req, res) => {
     return res.status(400).send(`No team with given id: ${req.params.id}`);
   }
 
-  if (req.body.team.managers.includes(req.body.user._id)) {
-    req.body.team.managers.splice(req.body.team.managers.indexOf(req.body.user._id));
+  if (req.body.team.managers.some(e => e._id === req.body.user._id)) {
+    req.body.team.managers.splice(req.body.team.managers.indexOf(req.body.team.managers.find(e => e._id === req.body.user._id), 1));
   }
 
-  if (req.body.team.playerRoster.includes(req.body.user._id)) {
-    req.body.team.playerRoster.splice(req.body.team.playerRoster.indexOf(req.body.user._id));
+  if (req.body.team.playerRoster.some(e => e._id === req.body.user._id)) {
+    req.body.team.playerRoster.splice(req.body.team.playerRoster.indexOf(req.body.team.playerRoster.find(e => e._id === req.body.user._id), 1));
   }
-  else if (req.body.team.coachRoster.includes(req.body.user._id)) {
-    req.body.team.coachRoster.splice(req.body.team.coachRoster.indexOf(req.body.user._id));
+  else if (req.body.team.coachRoster.some(e => e._id === req.body.user._id)) {
+    req.body.team.coachRoster.splice(req.body.team.coachRoster.indexOf(req.body.team.coachRoster.find(e => e._id === req.body.user._id), 1));
   }
 
   var team = {

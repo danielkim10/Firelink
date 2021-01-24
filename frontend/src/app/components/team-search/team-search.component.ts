@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TeamSearchService, Team } from '../../services/team-search-service/team-search.service';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
+import { TeamService } from '../../services/team-service/team.service';
+import { Team } from '../../services/models';
 
 @Component({
   selector: 'app-team-search',
@@ -12,7 +13,7 @@ export class TeamSearchComponent implements OnInit {
   teams: Array<Team>;
   userDetails: UserDetails;
 
-  constructor(private router: Router, private authenticationService: AuthenticationService, private teamSearchService: TeamSearchService) { }
+  constructor(private router: Router, private authenticationService: AuthenticationService, private teamService: TeamService) { }
 
   ngOnInit(): void {
     this.userDetails = this.authenticationService.getUserDetails();
@@ -20,7 +21,7 @@ export class TeamSearchComponent implements OnInit {
   }
 
   update(userDetails: UserDetails) {
-    this.teamSearchService.getTeams().subscribe((teams: Array<Team>) => {
+    this.teamService.getTeams().subscribe((teams: Array<Team>) => {
       this.teams = teams;
       console.log(teams);
     });

@@ -109,7 +109,7 @@ router.put('/addToTeam/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   var user = {
-    teamID: req.body.teamID,
+    teamID: req.body.team._id,
     freeAgent: false,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
@@ -123,9 +123,9 @@ router.put('/removeFromTeam/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
-  req.body.previousTeamIDs.push(req.body.teamID);
+  req.body.previousTeamIDs.push(req.body.teamID._id);
   var user = {
-    teamID: '',
+    teamID: null,
     previousTeamIDs: req.body.previousTeamIDs,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {

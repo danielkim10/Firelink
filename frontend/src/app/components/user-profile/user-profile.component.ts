@@ -98,12 +98,10 @@ export class UserProfileComponent implements OnInit {
 
   editProfile() {
     this.userEdit = Object.assign({}, this.user);
-    console.log(this.userEdit);
     this.editMode = true;
   }
 
   onSubmit(form: NgForm) {
-    console.log(this.userEdit);
     this.userService.saveUser(this.userEdit).subscribe((res) => {
       this.editMode = false;
       this.update(this.userDetails);
@@ -122,7 +120,6 @@ export class UserProfileComponent implements OnInit {
 
   home() {
     this.router.navigate(['/home']);
-    //this.location.back();
   }
 
   getOfficialData() {
@@ -141,7 +138,11 @@ export class UserProfileComponent implements OnInit {
 
         this.teamService.getTeam(invite.sender).subscribe((team: Team) => {
           this.teamService.deleteOutgoingInvite({invite: invite, team: team}).subscribe((res) => {
-            
+            this.teamService.addMember({user: this.user, team: team}).subscribe((res) => {
+              this.userService.addToTeam({user: this.user, team: team}).subscribe((res) => {
+
+              });
+            });
           });
         });
       });
@@ -150,7 +151,7 @@ export class UserProfileComponent implements OnInit {
 
   declineInvite(invite: Invite) {
     this.inviteService.inviteResponse(invite._id).subscribe((res) => {
-      //this.userService.deleteIncomingInvite({invite: invite, user: this.user}).subscribe((res) => {
+      this.userService.deleteIncomingInvite({invite: invite, user: this.user}).subscribe((res) => {
 
         this.teamService.getTeam(invite.sender).subscribe((team: Team) => {
           console.log(team);
@@ -158,7 +159,7 @@ export class UserProfileComponent implements OnInit {
             
           });
         });
-      //});
+      });
     });
   }
 

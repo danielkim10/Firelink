@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserSearchService, User } from '../../services/user-search-service/user-search.service';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
+import { UserService }  from '../../services/user-service/user.service';
+import { User } from '../../services/models';
 
 @Component({
   selector: 'app-user-search',
@@ -13,7 +14,7 @@ export class UserSearchComponent implements OnInit {
 
   users: Array<User>;
 
-  constructor(private router: Router, private authenticationService: AuthenticationService, private userSearchService: UserSearchService) { }
+  constructor(private router: Router, private authenticationService: AuthenticationService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.userDetails = this.authenticationService.getUserDetails();
@@ -21,7 +22,7 @@ export class UserSearchComponent implements OnInit {
   }
 
   update(userDetails: UserDetails) {
-    this.userSearchService.getUsers().subscribe((users: Array<User>) => {
+    this.userService.getUsers().subscribe((users: Array<User>) => {
       this.users = users;
       console.log(this.users);
     });
