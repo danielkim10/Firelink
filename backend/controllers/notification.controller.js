@@ -2,7 +2,7 @@ const express = require('express');
 var router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
-var { Notification } = require('../models/notification');
+var Notification = require('../models/notification');
 
 //#region Get
 
@@ -29,13 +29,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     var notification = new Notification({
-        sender: req.body.sender,
-        recipient: req.body.recipient,
         date: new Date(),
-        type: req.body.type,
-        teamID: req.body.teamID,
-        tournamentID: req.body.tournamentID,
-        userID: req.body.userID,
         subject: req.body.subject,
         message: req.body.message,
     });
@@ -55,18 +49,12 @@ router.put('/:id', (req, res) => {
         return res.status(400).send(`No notification with given id: ${req.params.id}`);
 
     var notification = {
-        sender: req.body.sender,
-        recipient: req.body.recipient,
         date: new Date(),
-        type: req.body.type,
-        teamID: req.body.teamID,
-        tournamentID: req.body.tournamentID,
-        userID: req.body.userID,
         subject: req.body.subject,
         message: req.body.message,
     };
 
-    Notification.findByIdAndUpdate(req.params.id, { $set: team }, { new: true }, (err, doc) => {
+    Notification.findByIdAndUpdate(req.params.id, { $set: notification }, { new: true }, (err, doc) => {
         if (!err) { res.send(doc); }
         else { console.log('Error updating notification: ' + JSON.stringify(err, undefined, 2)); }
     });
@@ -87,3 +75,5 @@ router.delete('/:id', (req, res) => {
   });
 
 //#endregion
+
+module.exports = router;

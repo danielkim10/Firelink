@@ -19,8 +19,13 @@ module.exports.register = function(req, res) {
     user.previousTeamIDs = [];
     user.recentTournaments = [];
     user.recentMatches = [];
+    user.unreadNotifications = [];
+    user.readNotifications = [];
+    user.incomingInvites = [];
+    user.outgoingApplications = [];
     user.active = true;
     user.freeAgent = false;
+    user.emailVerified = false;
 
     user.setPassword(req.body.password);
     user.save((err) => {
@@ -41,6 +46,11 @@ module.exports.login = function(req, res) {
             res.status(400).json(err);
             return;
         }
+        if (!user.active) {
+            res.status(400).json(err);
+            return;
+        }
+
         if (user) {
             token = user.generateJwt();
             res.status(200);

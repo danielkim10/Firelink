@@ -20,10 +20,13 @@ var teamSchema = new Schema({
   tournamentHistory: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   activelyRecruiting: Boolean,
   dateCreated: Date,
-  incomingNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
   incomingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
   outgoingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite '}],
   incomingApplications: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
+  twitchUrl: String,
+  twitterUrl: String,
+  youtubeUrl: String,
+  discordUrl: String,
 });
 
 const Team = mongoose.model('Team', teamSchema);

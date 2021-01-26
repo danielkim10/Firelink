@@ -48,4 +48,12 @@ export class UserService {
   deleteIncomingInvite(object: any) {
     return this.httpClient.put(this.baseUrl + 'deleteIncomingInvite/' + object.user._id, object);
   }
+
+  newUnreadNotification(object: any) {
+    return this.httpClient.put(this.baseUrl + 'newUnreadNotification/' + object.user._id, object);
+  }
+
+  readNotification(object: any) {
+    return this.httpClient.put(this.baseUrl + 'readNotification/' + object.user._id, object);
+  }
 }

@@ -21,13 +21,19 @@ var userSchema = new Schema({
   previousTeamIDs: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   recentTournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   recentMatches: [{ type: Schema.Types.ObjectId, ref: 'Match' }],
-  incomingNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+  unreadNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+  readNotifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
   incomingInvites: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
   outgoingApplications: [{ type: Schema.Types.ObjectId, ref: 'Invite' }],
+  twitchUrl: String,
+  twitterUrl: String,
+  youtubeUrl: String,
+  discordTag: String,
   active: Boolean,
   freeAgent: Boolean,
   hash: String,
   salt: String,
+  emailVerified: Boolean,
 });
 
 userSchema.methods.setPassword = function(password) {

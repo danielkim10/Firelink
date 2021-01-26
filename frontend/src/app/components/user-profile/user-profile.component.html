@@ -32,7 +32,7 @@
                                         <label>Free agent: {{user.freeAgent}}</label>
                                     </div>
                                     <div class="row">
-                                        <button mat-flat-button color="warn" type="button" (click)="deactivate()">Deactivate</button>
+                                        <button mat-flat-button color="warn" type="button" (click)="openDialog(user, 'deactivate')">Deactivate</button>
                                         <button mat-flat-button color="accent" type="button" (click)="home()">Home</button>
                                         <button mat-flat-button color="primary" type="button" *ngIf="!editMode" (click)="editProfile()">Edit</button>
                                     </div>
@@ -55,7 +55,7 @@
                                         <div class="row">
                                             <mat-form-field>
                                                 <mat-label>Role</mat-label>
-                                                <mat-select name="role" #name="ngModel" [(ngModel)]="userEdit.role._id" [(value)]="userEdit.role._id">
+                                                <mat-select name="role" #name="ngModel" [(ngModel)]="userEdit.role" [(value)]="userEdit.role">
                                                     <mat-option *ngFor="let role of roles" [value]="role._id">
                                                         {{role.name}}
                                                     </mat-option>
@@ -154,10 +154,10 @@
                                         <mat-drawer mode="side" opened>
                                             <mat-tab-group>
                                                 <mat-tab label="Notifications">
-                                                    <mat-selection-list #notifications [multiple]="false">
-                                                        <mat-list-option *ngFor="let notification of user.incomingNotifications" [value]="notification">
-                                                            <h3 matLine>{{notification.title}}</h3>
-                                                            <p matLine>{{notification.body}}</p>
+                                                    <mat-selection-list #notifications1 [multiple]="false">
+                                                        <mat-list-option *ngFor="let notification of notifications" [value]="notification">
+                                                            <h3 matLine>{{notification.subject}}</h3>
+                                                            <p matLine>{{notification.message}}</p>
                                                         </mat-list-option>
                                                     </mat-selection-list>
                                                 </mat-tab>

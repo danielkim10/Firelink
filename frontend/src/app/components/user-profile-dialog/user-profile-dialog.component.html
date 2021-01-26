@@ -1,0 +1,19 @@
+<h2 mat-dialog-title *ngIf="data.type ==='deactivate'">Deactivate Account?</h2>
+<mat-dialog-content>
+    <div *ngIf="data.type === 'deactivate'">
+        <div class="row">
+            <div class="row">
+                <p>To deactivate your account, enter the email registered with this account below</p>
+            </div>
+            <div class="row">
+                <mat-form-field>
+                <input matInput name="email" #name="ngModel" [(ngModel)]="email" value={{email}} placeholder="Enter email here">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="confirmAction(data.type)">Confirm</button>
+</mat-dialog-actions>

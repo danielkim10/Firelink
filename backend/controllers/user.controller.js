@@ -24,7 +24,8 @@ router.get('/:id', (req, res) => {
     else console.log('Error in retrieving user: ' + JSON.stringify(err, undefined, 2));
   }).populate('role').populate('teamID').populate('previousTeamIDs')
     .populate('recentTournaments').populate('recentMatches')
-    .populate('incomingNotifications').populate('incomingInvites').exec((err, user) => {
+    .populate('unreadNotifications').populate('readNotifications')
+    .populate('incomingInvites').populate('outgoingApplications').exec((err, user) => {
     if (err) return handleError(err);
   });
 });
@@ -62,6 +63,10 @@ router.put('/:id', (req, res) => {
     summonerName: req.body.summonerName,
     displayName: req.body.displayName,
     freeAgent: req.body.freeAgent,
+    twitchUrl: req.body.twitchUrl,
+    twitterUrl: req.body.twitterUrl,
+    youtubeUrl: req.body.youtubeUrl,
+    discordTag: req.body.discordTag,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
@@ -90,9 +95,6 @@ router.put('/deleteIncomingInvite/:id', (req, res) => {
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
   req.body.user.incomingInvites.splice(req.body.user.incomingInvites.indexOf(req.body.user.incomingInvites.find(e => e._id === req.body.invite._id)), 1);
-
-  console.log('a');
-  console.log(req.body.user.incomingInvites);
 
   var user = {
     incomingInvites: req.body.user.incomingInvites
@@ -141,6 +143,32 @@ router.put('/deactivate/:id', (req, res) => {
   
   var user = {
     active: false
+  };
+  User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.put('/newUnreadNotification/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No user with given id: ${req.params.id}`);
+  
+  req.body.user.unreadNotifications.push(req.body.notification._id);
+  var user = {
+    unreadNotifications: req.body.user.unreadNotifications
+  };
+  User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.put('/readNotification/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No user with given id: ${req.params.id}`);
+  
+  var user = {
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }

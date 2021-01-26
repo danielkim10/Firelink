@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
@@ -28,6 +29,8 @@ import { TeamProfileComponent } from './components/team-profile/team-profile.com
 import { UserSearchComponent } from './components/user-search/user-search.component';
 import { TeamSearchComponent } from './components/team-search/team-search.component';
 import { TeamProfileDialogComponent } from './components/team-profile-dialog/team-profile-dialog.component';
+import { TournamentDetailsComponent } from './components/tournament-details/tournament-details.component';
+import { UserProfileDialogComponent } from './components/user-profile-dialog/user-profile-dialog.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,9 @@ import { TeamProfileDialogComponent } from './components/team-profile-dialog/tea
     TeamProfileComponent,
     UserSearchComponent,
     TeamSearchComponent,
-    TeamProfileDialogComponent
+    TeamProfileDialogComponent,
+    TournamentDetailsComponent,
+    UserProfileDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +61,7 @@ import { TeamProfileDialogComponent } from './components/team-profile-dialog/tea
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatSelectModule,
     MatSidenavModule,
     MatTableModule,

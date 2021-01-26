@@ -23,7 +23,8 @@ router.get('/:id', (req, res) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
   }).populate('owner').populate('managers').populate({ path: 'playerRoster', populate: { path: 'role' }}).populate('coachRoster')
-    .populate('matchHistory').populate('tournamentHistory').exec((err, team) => {
+    .populate('matchHistory').populate('tournamentHistory').populate('incomingInvites').populate('outgoingInvites')
+    .populate('incomingApplications').exec((err, team) => {
       if (err) return handleError(err);
 
 
@@ -61,6 +62,13 @@ router.post('/', (req, res) => {
     tournamentHistory: req.body.team.tournamentHistory,
     activelyRecruiting: req.body.team.activelyRecruiting,
     dateCreated: new Date(),
+    incomingInvites: [],
+    outgoingInvites: [],
+    incomingApplications: [],
+    twitchUrl: req.body.team.twitchUrl,
+    twitterUrl: req.body.team.twitterUrl,
+    youtubeUrl: req.body.team.youtubeUrl,
+    discordUrl: req.body.team.discordUrl,
   });
 
   team.save((err, doc) => {
@@ -103,7 +111,11 @@ router.put('/find/:id', (req, res) => {
     active: req.body.active,
     matchHistory: req.body.matchHistory,
     tournamentHistory: req.body.tournamentHistory,
-    activelyRecruiting: req.body.activelyRecruiting
+    activelyRecruiting: req.body.activelyRecruiting,
+    twitchUrl: req.body.twitchUrl,
+    twitterUrl: req.body.twitterUrl,
+    youtubeUrl: req.body.youtubeUrl,
+    discordUrl: req.body.discordUrl,
   };
   Team.findByIdAndUpdate(req.params.id, { $set: team }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }

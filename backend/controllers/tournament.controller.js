@@ -2,8 +2,11 @@ const express = require('express');
 var router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
-var { Tournament } = require('../models/tournament');
+var Tournament = require('../models/tournament');
 
+//#region Get
+
+// get all tournamnets
 router.get('/', (req, res) => {
   Tournament.find((err, docs) => {
     if (!err) res.send(docs);
@@ -11,6 +14,7 @@ router.get('/', (req, res) => {
   });
 });
 
+// get tournament with _id
 router.get('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
@@ -21,6 +25,11 @@ router.get('/:id', (req, res) => {
   });
 });
 
+//#endregion
+
+//#region Post
+
+// create new tournament
 router.post('/', (req, res) => {
   var tournament = new Tournament({
     name: req.body.name,
@@ -28,6 +37,7 @@ router.post('/', (req, res) => {
     tournamentMasters: req.body.tournamentMasters,
     maxParticipants: req.body.maxParticipants,
     participants: req.body.participants,
+    onParticipants: req.body.onParticipants,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     rankRestrictionLB: req.body.rankRestrictionLB,
@@ -40,6 +50,11 @@ router.post('/', (req, res) => {
   });
 });
 
+//#endregion
+
+//#region Put
+
+// update tournament with _id
 router.put('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
@@ -50,6 +65,7 @@ router.put('/:id', (req, res) => {
     tournamentMasters: req.body.tournamentMasters,
     maxParticipants: req.body.maxParticipants,
     participants: req.body.participants,
+    onParticipants: req.body.onParticipants,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     rankRestrictionLB: req.body.rankRestrictionLB,
@@ -62,6 +78,11 @@ router.put('/:id', (req, res) => {
   });
 });
 
+//#endregion
+
+//#region Delete
+
+// delete tournament with _id
 router.delete('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
@@ -71,5 +92,7 @@ router.delete('/:id', (req, res) => {
     else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
   });
 });
+
+//#endregion
 
 module.exports = router;

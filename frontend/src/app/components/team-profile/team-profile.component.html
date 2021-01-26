@@ -304,14 +304,6 @@
                                         <mat-drawer-container class="drawer" autosize>
                                             <mat-drawer mode="side" opened>
                                                 <mat-tab-group>
-                                                    <mat-tab label="Notifications">
-                                                        <mat-selection-list #notifications [multiple]="false">
-                                                            <mat-list-option *ngFor="let notification of team.incomingNotifications" [value]="notification">
-                                                                <h3 matLine>{{notification.title}}</h3>
-                                                                <p matLine>{{notification.body}}</p>
-                                                            </mat-list-option>
-                                                        </mat-selection-list>
-                                                    </mat-tab>
                                                     <mat-tab label="Outgoing Invites">
                                                         <mat-selection-list #incomingInvites [multiple]="false">
                                                             <mat-list-option *ngFor="let invite of team.incomingInvites" [value]="invite">

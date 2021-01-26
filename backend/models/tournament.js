@@ -1,16 +1,21 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Tournament = mongoose.model('Tournament', {
-  name: { type: String, unique: true, required: true },
+var tournamentSchema = new Schema({
+  name: String,
   description: String,
-  tournamentMasters: [{ type: String, required: true }],
+  tournamentMasters: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   maxParticipants: Number,
-  participants: [String],
+  participants: [{ type: Schema.Types.ObjectId, ref: 'onParticipants' }],
+  onParticipants: { type: String, enum: ['Team', 'User'] },
   startDate: Date,
   endDate: Date,
-  rankRestrictionLB: Number,
-  rankRestrictionUB: Number,
-  status: { type: Number, required: true },
-})
+  format: String,
+  privacy: String,
+  rankRestrictionLB: String,
+  rankRestrictionUB: String,
+  status: String,
+});
 
-module.exports = { Tournament };
+const Tournament = mongoose.model('Tournament', tournamentSchema);
+module.exports = Tournament;

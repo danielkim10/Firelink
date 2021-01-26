@@ -1,12 +1,11 @@
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Notification = mongoose.model('Notification', {
-    sender: String,
-    recipients: [String],
+var notificationSchema = new Schema({
     date: Date,
-    type: String,
+    subject: String,
     message: String,
 });
 
-module.exports = { Notification };
+const Notification = mongoose.model('Notification', notificationSchema);
+module.exports = Notification;

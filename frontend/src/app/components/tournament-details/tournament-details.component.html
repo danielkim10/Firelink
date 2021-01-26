@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="col s6">
+        <mat-card>
+            <mat-card-content>
+                <div *ngIf="createMode">
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Tournament Name</mat-label>
+                            <input matInput name="name" #name="ngModel" [(ngModel)]="tournament.name" value={{tournament.name}} placeholder="Enter tournament name" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Description</mat-label>
+                            <input matInput name="description" #name="ngModel" [(ngModel)]="tournament.description" value={{tournament.description}} placeholder="Enter tournament description">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Rank lowerbound</mat-label>
+                            <mat-select [(value)]="tournament.rankRestrictionLB">
+                                <mat-option *ngFor="let rank of ranks" [value]="rank">
+                                    {{rank}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Rank upperbound</mat-label>
+                            <mat-select [(value)]="tournament.rankRestrictionUB">
+                                <mat-option *ngFor="let rank of ranks" [value]="rank">
+                                    {{rank}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Participants</mat-label>
+                            <mat-select [(value)]="tournament.maxParticipants">
+                                <mat-option *ngFor="let option of participantOptions" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Participants</mat-label>
+                            <mat-select [(value)]="tournament.onParticipants">
+                                <mat-option *ngFor="let type of participantTypes" [value]="type">
+                                    {{type}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Tournament Format</mat-label>
+                            <mat-select [(value)]="tournament.format">
+                                <mat-option *ngFor="let format of formats" [value]="format">
+                                    {{format}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Privacy</mat-label>
+                            <mat-select [(value)]="tournament.privacy">
+                                <mat-option *ngFor="let type of privacyTypes" [value]="type">
+                                    {{type}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="startdatepicker" (dateInput)="changeStartDate($event)" (dateChange)="changeStartDate($event)">
+                            <mat-datepicker-toggle matSuffix [for]="startdatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startdatepicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="enddatepicker" (dateInput)="changeEndDate($event)" (dateChange)="changeEndDate($event)">
+                            <mat-datepicker-toggle matSuffix [for]="enddatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #enddatepicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <button mat-flat-button color="primary" (click)="onSubmitCreateTournament()">Create</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <button mat-flat-button color="primary" (click)="createTournament()">Create</button>
+                        <button mat-flat-button color="warn" (click)="home()">Home</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User, Role, Team, Invite } from '../../services/models';
+import { MatDialog } from '@angular/material/dialog';
+import { User, Role, Team, Invite, Notification } from '../../services/models';
 import { UserService } from '../../services/user-service/user.service';
 import { TeamService } from '../../services/team-service/team.service';
 import { RoleService } from '../../services/role-service/role.service';
 import { InviteService } from '../../services/invite-service/invite.service';
 import { NotificationService } from '../../services/notification-service/notification.service';
 import { AuthenticationService } from '../../services/authentication-service/authentication.service';
+import { UserProfileDialogComponent } from '../user-profile-dialog/user-profile-dialog.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -29,10 +31,16 @@ export class UserProfileComponent implements OnInit {
     previousTeamIDs: [],
     recentTournaments: [],
     recentMatches: [],
-    incomingNotifications: [],
+    unreadNotifications: [],
+    readNotifications: [],
     incomingInvites: [],
     active: true,
     freeAgent: false,
+    twitchUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    discordTag: '',
+    emailVerified: false,
   };
 
   userEdit: User;
@@ -51,16 +59,19 @@ export class UserProfileComponent implements OnInit {
     tournamentHistory: [],
     activelyRecruiting: false,
     dateCreated: null,
-    incomingNotifications: [],
     incomingInvites: [],
     outgoingInvites: [],
     incomingApplications: [],
+    twitchUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    discordUrl: '',
   }
   teams: Array<Team>;
   roles: Array<Role>;
   tournaments: Array<any>;
   matches: Array<any>;
-  notifications: Array<any>;
+  notifications: Array<Notification>;
   invites: Array<any>;
   selectedInvite: String;
 
@@ -72,7 +83,7 @@ export class UserProfileComponent implements OnInit {
     private router: Router, 
     private authenticationService: AuthenticationService,
     private userService: UserService, private teamService: TeamService, private roleService: RoleService, private inviteService: InviteService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService, public dialog: MatDialog
     ) { }
 
   ngOnInit(): void {
@@ -81,11 +92,16 @@ export class UserProfileComponent implements OnInit {
   }
 
   update(userDetails: any) {
-
+    this.notifications = [];
     this.userService.getUser(userDetails._id).subscribe((userData: User) => {
       this.user = userData;
       console.log(this.user);
-
+      for (let notification in this.user.unreadNotifications) {
+        this.notifications.push(this.user.unreadNotifications[notification]);
+      }
+      for (let notification in this.user.readNotifications) {
+        this.notifications.push(this.user.readNotifications[notification]);
+      }
       this.roleService.getAdminRoles(false).subscribe((adminRoles: [Role]) => {
         this.roles = adminRoles;
 
@@ -110,10 +126,6 @@ export class UserProfileComponent implements OnInit {
     }, (err) => {
       console.error(err);
     });
-  }
-
-  deactivate() {
-
   }
 
   stopEditing() {
@@ -163,6 +175,19 @@ export class UserProfileComponent implements OnInit {
         });
       });
     });
+  }
+
+  openDialog(user: User, type: String) {
+    const dialogRef = this.dialog.open(UserProfileDialogComponent, {
+      data: {
+        type: type,
+        user: user
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      console.log(`Result: ${res}`);
+    })
   }
 
 }

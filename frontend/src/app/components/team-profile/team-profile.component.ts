@@ -41,10 +41,16 @@ export class TeamProfileComponent implements OnInit {
     previousTeamIDs: [],
     recentTournaments: [],
     recentMatches: [],
-    incomingNotifications: [],
+    unreadNotifications: [],
+    readNotifications: [],
     incomingInvites: [],
     active: true,
     freeAgent: false,
+    twitchUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    discordTag: '',
+    emailVerified: false,
   };
   team: Team = {
     _id: '',
@@ -60,10 +66,13 @@ export class TeamProfileComponent implements OnInit {
     tournamentHistory: [],
     activelyRecruiting: false,
     dateCreated: null,
-    incomingNotifications: [],
     incomingInvites: [],
     outgoingInvites: [],
     incomingApplications: [],
+    twitchUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    discordUrl: '',
   };
 
   teamEdit: Team;
@@ -79,10 +88,16 @@ export class TeamProfileComponent implements OnInit {
     previousTeamIDs: [],
     recentTournaments: [],
     recentMatches: [],
-    incomingNotifications: [],
+    unreadNotifications: [],
+    readNotifications: [],
     incomingInvites: [],
     active: true,
     freeAgent: false,
+    twitchUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    discordTag: '',
+    emailVerified: false,
   };
   users: Array<User> = [];
 
@@ -195,7 +210,6 @@ export class TeamProfileComponent implements OnInit {
   addMember() {
     this.addMemberMode = true;
     this.defaultMode = false;
-    console.log(this.users);
   }
 
   onNgModelChange(event) {

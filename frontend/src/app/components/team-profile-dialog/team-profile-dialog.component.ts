@@ -5,7 +5,8 @@ import { AuthenticationService, UserDetails } from '../../services/authenticatio
 import { TeamService } from '../../services/team-service/team.service';
 import { UserService } from '../../services/user-service/user.service';
 import { InviteService } from '../../services/invite-service/invite.service';
-import { User, Team, Invite } from '../../services/models';
+import { NotificationService } from '../../services/notification-service/notification.service';
+import { User, Team, Invite, Notification } from '../../services/models';
 
 export interface DialogData {
   type: String,
@@ -33,8 +34,16 @@ export class TeamProfileDialogComponent implements OnInit {
     responseReceived: false,
     opened: false,
   }
+  notification: Notification = {
+    _id: '',
+    date: null,
+    subject: '',
+    message: '',
+  }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData, private userService: UserService, private teamService: TeamService, private inviteService: InviteService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData, private userService: UserService, private teamService: TeamService, 
+  private inviteService: InviteService, private notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
     if (this.data.member._id === this.data.team.owner._id) {
@@ -63,10 +72,19 @@ export class TeamProfileDialogComponent implements OnInit {
       });
     }
     else if (type === 'invite') {
+      this.notification.subject = 'Team Invite';
+      this.notification.message = `You have been invited to join the team '${this.data.team.name}'`;
+
       this.inviteService.createInviteForUser({ invite: this.invite, senderId: this.data.team._id, recipientId: this.data.member._id }).subscribe((inviteData: Invite) => {
         this.teamService.teamSendsInvite({ team: this.data.team, invite: inviteData }).subscribe((res) => {
           this.userService.receiveTeamInvite({ user: this.data.member, invite: inviteData }).subscribe((res1) => {
+            this.notificationService.createNotification(this.notification).subscribe((notificationData: Notification) => {
+              console.log(notificationData);
+              console.log(this.data.member);
+              this.userService.newUnreadNotification({notification: notificationData, user: this.data.member}).subscribe((res2) => {
 
+              });
+            });
           });
         });
       });
