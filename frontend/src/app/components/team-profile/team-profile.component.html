@@ -5,10 +5,10 @@
                 <div class="row">
                     <div class="col s12">
 
-                        <div *ngIf="!user.teamID">
+                        <div *ngIf="!user.team">
                             <div *ngIf="!createMode">
                                 <div class="row">
-                                    <label *ngIf="!user.teamID">You are currently not in any team. Create or join a team</label>
+                                    <label *ngIf="!user.team">You are currently not in any team. Create or join a team</label>
                                 </div>
                                 <div class="row">
                                     <button mat-flat-button color="primary" type="button" (click)="createTeam()">Create</button>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="user.teamID">
+                        <div *ngIf="user.team">
                             <mat-tab-group>
                                 <mat-tab label="Overview">
                                     <div *ngIf="!editMode && defaultMode">

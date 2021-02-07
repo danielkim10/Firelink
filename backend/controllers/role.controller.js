@@ -47,7 +47,7 @@ router.put('/:id', (req, res) => {
     name: req.body.name,
     admin: req.body.admin
   };
-  Role.findByIdAndUpdate(req.params.id, { $set: Role }, { new: true }, (err, doc) => {
+  Role.findByIdAndUpdate(req.params.id, { $set: role }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating role: ' + JSON.stringify(err, undefined, 2)); }
   });
@@ -60,6 +60,13 @@ router.delete('/:id', (req, res) => {
   Role.findByIdAndRemove(req.params.id, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating role: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.delete('/', (req, res) => {
+  Role.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting roles : ' + JSON.stringify(err, undefined, 2)); }
   });
 });
 

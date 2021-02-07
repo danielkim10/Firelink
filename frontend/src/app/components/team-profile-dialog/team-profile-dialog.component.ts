@@ -25,9 +25,9 @@ export class TeamProfileDialogComponent implements OnInit {
   invite: Invite = {
     _id: '',
     sender: null,
-    onSender: '',
+    senderType: '',
     recipient: null,
-    onRecipient: '',
+    recipientType: '',
     date: null,
     subject: '',
     message: '',

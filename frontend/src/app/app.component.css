@@ -1,0 +1,12 @@
+.navbar {
+    justify-content: space-between;
+}
+
+.cdk-overlay-container{
+    left: 200px;
+    top: 200px;
+}
+
+.cdk-overlay-connected-position-bounding-box{
+    top: 0 !important;
+}

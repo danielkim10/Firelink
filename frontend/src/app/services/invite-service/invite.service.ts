@@ -6,7 +6,7 @@ import { Invite } from '../models';
   providedIn: 'root'
 })
 export class InviteService {
-  readonly baseUrl = 'http://localhost:3000/invite/';
+  readonly baseUrl = 'http://localhost:3000/invites/';
   constructor(private httpClient: HttpClient) { }
 
   createInviteForUser(object: any) {

@@ -60,4 +60,11 @@ router.delete('/:id', (req, res) => {
   });
 });
 
+router.delete('/', (req, res) => {
+  Game.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting games : ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
 module.exports = router;

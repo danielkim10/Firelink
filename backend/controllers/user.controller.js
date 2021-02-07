@@ -22,8 +22,8 @@ router.get('/:id', (req, res) => {
   User.findById(req.params.id, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving user: ' + JSON.stringify(err, undefined, 2));
-  }).populate('role').populate('teamID').populate('previousTeamIDs')
-    .populate('recentTournaments').populate('recentMatches')
+  }).populate('role').populate('team').populate('previousTeams').populate('tournaments')
+    .populate('previousTournaments').populate('previousMatches')
     .populate('unreadNotifications').populate('readNotifications')
     .populate('incomingInvites').populate('outgoingApplications').exec((err, user) => {
     if (err) return handleError(err);
@@ -60,13 +60,30 @@ router.put('/:id', (req, res) => {
   var user = {
     role: req.body.role,
     description: req.body.description,
-    summonerName: req.body.summonerName,
-    displayName: req.body.displayName,
     freeAgent: req.body.freeAgent,
     twitchUrl: req.body.twitchUrl,
     twitterUrl: req.body.twitterUrl,
     youtubeUrl: req.body.youtubeUrl,
     discordTag: req.body.discordTag,
+
+    summonerName: req.body.summonerName,
+    summonerId: req.body.summonerId,
+    puuid: req.body.puuid,
+    summonerLevel: req.body.summonerLevel,
+    profileIconId: req.body.profileIconId,
+    lastUpdated: req.body.lastUpdated,
+
+    soloTier: req.body.soloTier,
+    soloRank: req.body.soloRank,
+    soloLP: req.body.soloLP,
+    soloWins: req.body.soloWins,
+    soloLosses: req.body.soloLosses,
+
+    flexTier: req.body.flexTier,
+    flexRank: req.body.flexRank,
+    flexLP: req.body.flexLP,
+    flexWins: req.body.flexWins,
+    flexLosses: req.body.flexLosses,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
@@ -111,7 +128,7 @@ router.put('/addToTeam/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   var user = {
-    teamID: req.body.team._id,
+    team: req.body.team._id,
     freeAgent: false,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
@@ -127,8 +144,8 @@ router.put('/removeFromTeam/:id', (req, res) => {
   
   req.body.previousTeamIDs.push(req.body.teamID._id);
   var user = {
-    teamID: null,
-    previousTeamIDs: req.body.previousTeamIDs,
+    team: null,
+    previousTeams: req.body.previousTeams,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
@@ -188,6 +205,13 @@ router.delete('/:id', (req, res) => {
   User.findByIdAndRemove(req.params.id, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.delete('/', (req, res) => {
+  User.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting users : ' + JSON.stringify(err, undefined, 2)); }
   });
 });
 

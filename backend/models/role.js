@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 //player, coach, tournament master, 
-var Role = new mongoose.Schema({
+var roleSchema = new Schema({
   name: { type: String, required: true },
   admin: { type: Boolean, required: true },
-})
+});
 
-module.exports = mongoose.model('Role', Role);
+const Role = mongoose.model('Role', roleSchema);
+module.exports = Role;

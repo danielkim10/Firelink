@@ -6,10 +6,10 @@ var Tournament = require('./tournament');
 var User = require('./user');
 
 var inviteSchema = new Schema({
-    sender: { type: Schema.Types.ObjectId, refPath: 'onSender' },
-    onSender: { type: String, enum: ['Team', 'Tournament', 'User'] },
-    recipient: { type: Schema.Types.ObjectId, refPath: 'onRecipient' },
-    onRecipient: { type: String, enum: ['Team', 'Tournament', 'User'] },
+    sender: { type: Schema.Types.ObjectId, refPath: 'senderType' },
+    senderType: { type: String, enum: ['Team', 'Tournament'] },
+    recipient: { type: Schema.Types.ObjectId, refPath: 'recipientType' },
+    recipientType: { type: String, enum: ['Team', 'User'] },
     date: Date,
     subject: String,
     message: String,

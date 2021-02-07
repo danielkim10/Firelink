@@ -65,14 +65,21 @@ router.put('/:id', (req, res) => {
 //#region Delete
 
 router.delete('/:id', (req, res) => {
-    if (!ObjectId.isValid(req.params.id))
-      return res.status(400).send(`No notification with given id: ${req.params.id}`);
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No notification with given id: ${req.params.id}`);
     
-    Notification.findByIdAndRemove(req.params.id, (err, doc) => {
-      if (!err) { res.send(doc); }
-      else { console.log('Error updating notification: ' + JSON.stringify(err, undefined, 2)); }
-    });
+  Notification.findByIdAndRemove(req.params.id, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating notification: ' + JSON.stringify(err, undefined, 2)); }
   });
+});
+
+router.delete('/', (req, res) => {
+  Notification.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting notifications : ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
 
 //#endregion
 

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Match = mongoose.model('Match', {
-  gameIDs: [String],
-  tournamentID: { type: String, required: true },
-  teamA: String,
-  teamB: String,
+var matchSchema = new Schema({
+  gameIDs: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+  tournamentID: { type: Schema.Types.ObjectId, ref: 'Tournament' },
+  teamA: { type: Schema.Types.ObjectId, ref: 'Team' },
+  teamB: { type: Schema.Types.ObjectId, ref: 'Team' },
   date: Date,
   teamAScore: Number,
   teamBScore: Number,
@@ -12,4 +13,5 @@ var Match = mongoose.model('Match', {
   status: { type: Number, required: true },
 });
 
-module.exports = { Match };
+const Match = mongoose.model('Match', matchSchema);
+module.exports = Match;

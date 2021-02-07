@@ -23,12 +23,9 @@ router.get('/:id', (req, res) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
   }).populate('owner').populate('managers').populate({ path: 'playerRoster', populate: { path: 'role' }}).populate('coachRoster')
-    .populate('matchHistory').populate('tournamentHistory').populate('incomingInvites').populate('outgoingInvites')
-    .populate('incomingApplications').exec((err, team) => {
+    .populate('previousMembers').populate('previousMatches').populate('previousTournaments')
+    .populate('incomingInvites').populate('outgoingInvites').populate('incomingApplications').exec((err, team) => {
       if (err) return handleError(err);
-
-
-
     });
 });
 
@@ -53,22 +50,28 @@ router.post('/', (req, res) => {
   var team = new Team({
     name: req.body.team.name,
     tag: req.body.team.tag,
-    owner: req.body.team.owner,
-    managers: req.body.team.managers,
-    playerRoster: req.body.team.playerRoster,
-    coachRoster: req.body.team.coachRoster,
-    active: true,
-    matchHistory: req.body.team.matchHistory,
-    tournamentHistory: req.body.team.tournamentHistory,
-    activelyRecruiting: req.body.team.activelyRecruiting,
-    dateCreated: new Date(),
-    incomingInvites: [],
-    outgoingInvites: [],
-    incomingApplications: [],
+    logo: req.body.team.logo,
     twitchUrl: req.body.team.twitchUrl,
     twitterUrl: req.body.team.twitterUrl,
     youtubeUrl: req.body.team.youtubeUrl,
     discordUrl: req.body.team.discordUrl,
+    active: true,
+    activelyRecruiting: req.body.team.activelyRecruiting,
+    dateCreated: new Date(),
+    dateDisbanded: null,
+
+    owner: req.body.team.owner,
+    managers: req.body.team.managers,
+    playerRoster: req.body.team.playerRoster,
+    coachRoster: req.body.team.coachRoster,
+    
+    previousMembers: req.body.team.previousMembers,
+    previousMatches: req.body.team.matchHistory,
+    tournamentHistory: req.body.team.tournamentHistory,
+    
+    incomingInvites: [],
+    outgoingInvites: [],
+    incomingApplications: [],
   });
 
   team.save((err, doc) => {
@@ -105,17 +108,11 @@ router.put('/find/:id', (req, res) => {
     name: req.body.name,
     tag: req.body.tag,
     logo: req.body.logo,
-    owner: req.body.owner,
-    playerRoster: req.body.playerRoster,
-    coachRoster: req.body.coachRoster,
-    active: req.body.active,
-    matchHistory: req.body.matchHistory,
-    tournamentHistory: req.body.tournamentHistory,
-    activelyRecruiting: req.body.activelyRecruiting,
     twitchUrl: req.body.twitchUrl,
     twitterUrl: req.body.twitterUrl,
     youtubeUrl: req.body.youtubeUrl,
     discordUrl: req.body.discordUrl,
+    activelyRecruiting: req.body.activelyRecruiting,
   };
   Team.findByIdAndUpdate(req.params.id, { $set: team }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
@@ -195,12 +192,13 @@ router.put('/disband/:id', (req, res) => {
   }
 
   var team = {
-    owner: '',
+    owner: null,
     managers: [],
     playerRoster: [],
     coachRoster: [],
     active: false,
     activeRecruiting: false,
+    dateDisbanded: new Date(),
   };
   Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {
     if (!err) res.send(doc);
@@ -277,6 +275,13 @@ router.delete('/:id', (req, res) => {
   Team.findByIdAndRemove(req.params.id, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating team: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.delete('/', (req, res) => {
+  Team.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting teams: ' + JSON.stringify(err, undefined, 2)); }
   });
 });
 

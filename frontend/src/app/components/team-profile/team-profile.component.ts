@@ -35,21 +35,42 @@ export class TeamProfileComponent implements OnInit {
     email: '',
     role: null,
     description: '',
-    summonerName: '',
-    displayName: '',
-    teamID: null,
-    previousTeamIDs: [],
-    recentTournaments: [],
-    recentMatches: [],
-    unreadNotifications: [],
-    readNotifications: [],
-    incomingInvites: [],
-    active: true,
-    freeAgent: false,
     twitchUrl: '',
     twitterUrl: '',
     youtubeUrl: '',
     discordTag: '',
+    active: true,
+    freeAgent: false,
+
+    summonerName: '',
+    summonerId: '',
+    puuid: '',
+    summonerLevel: -1,
+    profileIconId: -1,
+    lastUpdated: null,
+
+    soloTier: '',
+    soloRank: null,
+    soloLP: -1,
+    soloWins: -1,
+    soloLosses: -1,
+
+    flexTier: '',
+    flexRank: null,
+    flexLP: -1,
+    flexWins: -1,
+    flexLosses: -1,
+
+    team: null,
+    previousTeams: [],
+    tournaments: [],
+    previousTournaments: [],
+    previousMatches: [],
+    unreadNotifications: [],
+    readNotifications: [],
+    incomingInvites: [],
+    outgoingApplications: [],    
+    
     emailVerified: false,
   };
   team: Team = {
@@ -57,22 +78,28 @@ export class TeamProfileComponent implements OnInit {
     name: '',
     tag: '',
     logo: '',
-    owner: null,
-    managers: [],
-    playerRoster: [],
-    coachRoster: [],
-    active: true,
-    matchHistory: [],
-    tournamentHistory: [],
-    activelyRecruiting: false,
-    dateCreated: null,
-    incomingInvites: [],
-    outgoingInvites: [],
-    incomingApplications: [],
     twitchUrl: '',
     twitterUrl: '',
     youtubeUrl: '',
     discordUrl: '',
+    active: true,
+    activelyRecruiting: false,
+    dateCreated: null,
+    dateDisbanded: null,
+
+    owner: null,
+    managers: [],
+    playerRoster: [],
+    coachRoster: [],
+    averageRank: null,
+    
+    previousMembers: [],
+    previousMatches: [],
+    previousTournaments: [],
+    
+    incomingInvites: [],
+    outgoingInvites: [],
+    incomingApplications: [],
   };
 
   teamEdit: Team;
@@ -82,21 +109,42 @@ export class TeamProfileComponent implements OnInit {
     email: '',
     role: null,
     description: '',
-    summonerName: '',
-    displayName: '',
-    teamID: null,
-    previousTeamIDs: [],
-    recentTournaments: [],
-    recentMatches: [],
-    unreadNotifications: [],
-    readNotifications: [],
-    incomingInvites: [],
-    active: true,
-    freeAgent: false,
     twitchUrl: '',
     twitterUrl: '',
     youtubeUrl: '',
     discordTag: '',
+    active: true,
+    freeAgent: false,
+
+    summonerName: '',
+    summonerId: '',
+    puuid: '',
+    summonerLevel: -1,
+    profileIconId: -1,
+    lastUpdated: null,
+
+    soloTier: '',
+    soloRank: null,
+    soloLP: -1,
+    soloWins: -1,
+    soloLosses: -1,
+
+    flexTier: '',
+    flexRank: null,
+    flexLP: -1,
+    flexWins: -1,
+    flexLosses: -1,
+
+    team: null,
+    previousTeams: [],
+    tournaments: [],
+    previousTournaments: [],
+    previousMatches: [],
+    unreadNotifications: [],
+    readNotifications: [],
+    incomingInvites: [],
+    outgoingApplications: [],    
+    
     emailVerified: false,
   };
   users: Array<User> = [];
@@ -122,8 +170,8 @@ export class TeamProfileComponent implements OnInit {
 
       this.roleService.getAdminRoles(false).subscribe((roleData: [Role]) => {
         this.roles = roleData;
-        if (userData.teamID !== null) {
-          this.teamService.getTeam(userData.teamID._id).subscribe((teamData: Team) => {
+        if (userData.team !== null) {
+          this.teamService.getTeam(userData.team._id).subscribe((teamData: Team) => {
             this.team = teamData;
             for (let player in teamData.playerRoster) {
               this.members.push(teamData.playerRoster[player]);
@@ -159,7 +207,7 @@ export class TeamProfileComponent implements OnInit {
 
   onSubmitCreateTeam(form: NgForm) {
     this.teamService.createTeam({ team: this.team, user: this.user }).subscribe((teamData: Team) => {
-      this.user.teamID = teamData;
+      this.user.team = teamData;
       this.userService.addToTeam(this.user).subscribe((userData: User) => {
         
         this.createMode = false;
@@ -215,7 +263,7 @@ export class TeamProfileComponent implements OnInit {
   onNgModelChange(event) {
     this.selectedUser._id = event[0]._id;
     this.selectedUser.role = event[0].role;
-    this.selectedUser.teamID = this.team;
+    this.selectedUser.team = this.team;
   }
 
   confirmAddMember() {

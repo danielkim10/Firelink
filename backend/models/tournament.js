@@ -6,14 +6,14 @@ var tournamentSchema = new Schema({
   description: String,
   tournamentMasters: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   maxParticipants: Number,
-  participants: [{ type: Schema.Types.ObjectId, ref: 'onParticipants' }],
-  onParticipants: { type: String, enum: ['Team', 'User'] },
+  participants: [{ type: Schema.Types.ObjectId, ref: 'participantTypes' }],
+  participantTypes: { type: String, enum: ['Team', 'User'] },
   startDate: Date,
   endDate: Date,
   format: String,
   privacy: String,
-  rankRestrictionLB: String,
-  rankRestrictionUB: String,
+  rankRestrictionLB: { type: Schema.Types.ObjectId, ref: 'Rank' },
+  rankRestrictionUB: { type: Schema.Types.ObjectId, ref: 'Rank' },
   status: String,
 });
 

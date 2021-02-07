@@ -1,105 +1,216 @@
-<div class="row">
-    <div class="col s6">
+<div fxLayout="row" fxLayoutAlign="center">
+    <div fxFill>
         <mat-card>
             <mat-card-content>
-                <div *ngIf="createMode">
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Tournament Name</mat-label>
-                            <input matInput name="name" #name="ngModel" [(ngModel)]="tournament.name" value={{tournament.name}} placeholder="Enter tournament name" required>
-                        </mat-form-field>
+                <div *ngIf="user?.role?.name === 'Tournament Master'">
+                    <div *ngIf="defaultMode">
+                        <div *ngIf="defaultMode">
+                            <div fxLayout="row" fxLayoutAlign="space-around center">
+                                <div>
+                                    <button mat-flat-button color="primary" [disabled]="inCalendarView" (click)="changeView()">Calendar</button>
+                                    <button mat-flat-button color="primary" [disabled]="!inCalendarView" (click)="changeView()">List</button>
+                                </div>
+                                <div>
+                                    <h2>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h2>
+                                </div>
+                                <div>
+                                    <button mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()" mat-flat-button color="primary">Previous</button>
+                                    <button mwlCalendarToday [(viewDate)]="viewDate" mat-flat-button color="basic">Today</button>
+                                    <button mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()" mat-flat-button color="primary">Next</button>
+                                </div>
+                            </div>
+                            <br/>
+                            <div *ngIf="inCalendarView">
+                                <div [ngSwitch]="view">
+                                    <mwl-calendar-month-view 
+                                        *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+                                        [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
+                                        (eventTimesChanged)="eventTimesChanged($event)">
+                                    </mwl-calendar-month-view>
+                                </div>
+                            </div>
+                            <div *ngIf="!inCalendarView">
+    
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Description</mat-label>
-                            <input matInput name="description" #name="ngModel" [(ngModel)]="tournament.description" value={{tournament.description}} placeholder="Enter tournament description">
-                        </mat-form-field>
+                    <div *ngIf="createMode">
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Tournament Name</mat-label>
+                                <input matInput name="name" #name="ngModel" [(ngModel)]="tournament.name" value={{tournament.name}} placeholder="Enter tournament name" required>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Description</mat-label>
+                                <input matInput name="description" #name="ngModel" [(ngModel)]="tournament.description" value={{tournament.description}} placeholder="Enter tournament description">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Rank lowerbound</mat-label>
+                                <mat-select [(value)]="tournament.rankRestrictionLB">
+                                    <mat-option *ngFor="let rank of ranks" [value]="rank._id">
+                                        {{rank.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Rank upperbound</mat-label>
+                                <mat-select [(value)]="tournament.rankRestrictionUB">
+                                    <mat-option *ngFor="let rank of ranks" [value]="rank._id">
+                                        {{rank.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Participants</mat-label>
+                                <mat-select [(value)]="tournament.maxParticipants">
+                                    <mat-option *ngFor="let option of participantOptions" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Participants</mat-label>
+                                <mat-select [(value)]="tournament.participantTypes">
+                                    <mat-option *ngFor="let type of participantTypes" [value]="type">
+                                        {{type}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Tournament Format</mat-label>
+                                <mat-select [(value)]="tournament.format">
+                                    <mat-option *ngFor="let format of formats" [value]="format">
+                                        {{format}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Privacy</mat-label>
+                                <mat-select [(value)]="tournament.privacy">
+                                    <mat-option *ngFor="let type of privacyTypes" [value]="type">
+                                        {{type}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Start Date</mat-label>
+                                <input matInput [matDatepicker]="startdatepicker" (dateInput)="changeStartDate($event)" (dateChange)="changeStartDate($event)">
+                                <mat-datepicker-toggle matSuffix [for]="startdatepicker"></mat-datepicker-toggle>
+                                <mat-datepicker #startdatepicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>End Date</mat-label>
+                                <input matInput [matDatepicker]="enddatepicker" (dateInput)="changeEndDate($event)" (dateChange)="changeEndDate($event)">
+                                <mat-datepicker-toggle matSuffix [for]="enddatepicker"></mat-datepicker-toggle>
+                                <mat-datepicker #enddatepicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <button mat-flat-button color="warn" (click)="back()">Back</button>
+                            <button mat-flat-button color="primary" (click)="onSubmitCreateTournament()">Create</button>
+                        </div>
                     </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Rank lowerbound</mat-label>
-                            <mat-select [(value)]="tournament.rankRestrictionLB">
-                                <mat-option *ngFor="let rank of ranks" [value]="rank">
-                                    {{rank}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                    <div *ngIf="viewMode">
+                        <div>
+                            <label>Name: {{tournament.name}}</label>
+                        </div>
+                        <div>
+                            <label>Description: {{tournament.description}}</label>
+                        </div>
+                        <div>
+                            <label>Max Participants: {{tournament.maxParticipants}}</label>
+                        </div>
+                        <div>
+                            <label>Start Date: {{tournament.startDate}}</label>
+                        </div>
+                        <div>
+                            <label>End Date: {{tournament.endDate}}</label>
+                        </div>
+                        <div>
+                            <label>Format: {{tournament.format}}</label>
+                        </div>
+                        <div>
+                            <label>Privacy: {{tournament.privacy}}</label>
+                        </div>
+                        <div>
+                            <label>Rank Restriction LB: {{tournament.rankRestrictionLB?.name}}</label>
+                        </div>
+                        <div>
+                            <label>Rank Restriction UB: {{tournament.rankRestrictionUB?.name}}</label>
+                        </div>
+                        <div>
+                            <label>Status: {{tournament.status}}</label>
+                        </div>
+                        <div>
+                            <button mat-flat-button color="warn" (click)="back()">Back</button>
+                        </div>
                     </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Rank upperbound</mat-label>
-                            <mat-select [(value)]="tournament.rankRestrictionUB">
-                                <mat-option *ngFor="let rank of ranks" [value]="rank">
-                                    {{rank}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Participants</mat-label>
-                            <mat-select [(value)]="tournament.maxParticipants">
-                                <mat-option *ngFor="let option of participantOptions" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Participants</mat-label>
-                            <mat-select [(value)]="tournament.onParticipants">
-                                <mat-option *ngFor="let type of participantTypes" [value]="type">
-                                    {{type}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Tournament Format</mat-label>
-                            <mat-select [(value)]="tournament.format">
-                                <mat-option *ngFor="let format of formats" [value]="format">
-                                    {{format}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Privacy</mat-label>
-                            <mat-select [(value)]="tournament.privacy">
-                                <mat-option *ngFor="let type of privacyTypes" [value]="type">
-                                    {{type}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>Start Date</mat-label>
-                            <input matInput [matDatepicker]="startdatepicker" (dateInput)="changeStartDate($event)" (dateChange)="changeStartDate($event)">
-                            <mat-datepicker-toggle matSuffix [for]="startdatepicker"></mat-datepicker-toggle>
-                            <mat-datepicker #startdatepicker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field>
-                            <mat-label>End Date</mat-label>
-                            <input matInput [matDatepicker]="enddatepicker" (dateInput)="changeEndDate($event)" (dateChange)="changeEndDate($event)">
-                            <mat-datepicker-toggle matSuffix [for]="enddatepicker"></mat-datepicker-toggle>
-                            <mat-datepicker #enddatepicker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <button mat-flat-button color="primary" (click)="onSubmitCreateTournament()">Create</button>
+                    <div>
+                        <div>
+                            <button mat-flat-button color="primary" (click)="createTournament()">Create</button>
+                            <button mat-flat-button color="warn" (click)="home()">Home</button>
+                        </div>
                     </div>
                 </div>
+                    
+                <div *ngIf="user?.role?.name !== 'Tournament Master'">
+                    <div *ngIf="defaultMode">
+                        <div fxLayout="row" fxLayoutAlign="space-around center">
+                            <div>
+                                <button mat-flat-button color="primary" [disabled]="inCalendarView" (click)="changeView()">Calendar</button>
+                                <button mat-flat-button color="primary" [disabled]="!inCalendarView" (click)="changeView()">List</button>
+                            </div>
+                            <div>
+                                <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                            </div>
+                            <div>
+                                <button mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()" mat-flat-button color="primary">Previous</button>
+                                <button mwlCalendarToday [(viewDate)]="viewDate" mat-flat-button color="basic">Today</button>
+                                <button mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()" mat-flat-button color="primary">Next</button>
+                            </div>
+                        </div>
+                        <br/>
+                        <div *ngIf="inCalendarView">
+                            <div [ngSwitch]="view">
+                                <mwl-calendar-month-view 
+                                    *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+                                    (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
+                                    (eventTimesChanged)="eventTimesChanged($event)">
+                                </mwl-calendar-month-view>
+                            </div>
+                        </div>
+                        <div *ngIf="!inCalendarView">
 
-                <div class="row">
-                    <div class="col s12">
-                        <button mat-flat-button color="primary" (click)="createTournament()">Create</button>
-                        <button mat-flat-button color="warn" (click)="home()">Home</button>
+                        </div>
+                    </div>
+                    <div *ngIf="viewMode">
+                        <div>
+
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div>
+                            <button mat-flat-button color="warn" (click)="home()">Home</button>
+                        </div>
                     </div>
                 </div>
             </mat-card-content>

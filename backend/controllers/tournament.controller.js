@@ -37,9 +37,11 @@ router.post('/', (req, res) => {
     tournamentMasters: req.body.tournamentMasters,
     maxParticipants: req.body.maxParticipants,
     participants: req.body.participants,
-    onParticipants: req.body.onParticipants,
+    onParticipants: req.body.participantTypes,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
+    format: req.body.format,
+    privacy: req.body.privacy,
     rankRestrictionLB: req.body.rankRestrictionLB,
     rankRestrictionUB: req.body.rankRestrictionUB,
     status: req.body.status
@@ -68,6 +70,8 @@ router.put('/:id', (req, res) => {
     onParticipants: req.body.onParticipants,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
+    format: req.body.format,
+    privacy: req.body.privacy,
     rankRestrictionLB: req.body.rankRestrictionLB,
     rankRestrictionUB: req.body.rankRestrictionUB,
     status: req.body.status
@@ -90,6 +94,13 @@ router.delete('/:id', (req, res) => {
   Tournament.findByIdAndRemove(req.params.id, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+router.delete('/', (req, res) => {
+  Tournament.deleteMany({}, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error deleting tournaments : ' + JSON.stringify(err, undefined, 2)); }
   });
 });
 

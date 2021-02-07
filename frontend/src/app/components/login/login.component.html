@@ -1,20 +1,20 @@
-<div class="row">
-    <div class="col s6">
+<div fxLayout="row" fxLayoutAlign="center">
+    <div>
         <mat-card>
             <mat-card-content>
-                <div class="row">
-                    <div class="col s12">
+                <div>
+                    <div>
                         <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-                            <div class="row">
-                                <div class="input-field col s12">
+                            <div>
+                                <div>
                                     <h1>Firelink</h1>
-                                    <div class="row">
+                                    <div>
                                         <mat-form-field>
                                             <mat-label>Email</mat-label>
                                             <input matInput type="text" name="username" #name="ngModel" [(ngModel)]="credentials.email" placeholder="Enter email" required>
                                         </mat-form-field>
                                     </div>
-                                    <div class="row">
+                                    <div>
                                         <mat-form-field>
                                             <mat-label>Password</mat-label>
                                             <input matInput type="password" name="password" #name="ngModel" [(ngModel)]="credentials.password" placeholder="Enter password" required>
@@ -23,8 +23,8 @@
                                     <div [innerHTML]="invalidPassword"></div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="input-field col s12">
+                            <div>
+                                <div>
                                     <button mat-flat-button color="primary" type="submit">Submit</button>
                                     <button mat-flat-button color="primary" (click)="register()">Register</button>
                                 </div>

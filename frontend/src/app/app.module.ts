@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
@@ -24,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TeamProfileComponent } from './components/team-profile/team-profile.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
@@ -31,6 +33,9 @@ import { TeamSearchComponent } from './components/team-search/team-search.compon
 import { TeamProfileDialogComponent } from './components/team-profile-dialog/team-profile-dialog.component';
 import { TournamentDetailsComponent } from './components/tournament-details/tournament-details.component';
 import { UserProfileDialogComponent } from './components/user-profile-dialog/user-profile-dialog.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -44,13 +49,15 @@ import { UserProfileDialogComponent } from './components/user-profile-dialog/use
     TeamSearchComponent,
     TeamProfileDialogComponent,
     TournamentDetailsComponent,
-    UserProfileDialogComponent
+    UserProfileDialogComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -66,7 +73,9 @@ import { UserProfileDialogComponent } from './components/user-profile-dialog/use
     MatSidenavModule,
     MatTableModule,
     MatTabsModule,
-    BrowserAnimationsModule
+    MatToolbarModule,
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [],
   bootstrap: [AppComponent]

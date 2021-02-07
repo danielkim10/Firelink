@@ -6,6 +6,5 @@ mongoose.connect('mongodb://localhost:27017/TournamentManager', { useUnifiedTopo
   else
     console.log('Error in DB connection: ' + JSON.stringify(err, undefined, 2));
 });
-mongoose.set('debug', true);
 
 module.exports = mongoose;

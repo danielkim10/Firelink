@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s6">
+    <div flex="100">
         <mat-card>
             <mat-card-content>
                 <div class="row">
@@ -8,28 +8,31 @@
                             <mat-tab label="Overview">
                                 <div *ngIf="!editMode">
                                     <div class="row">
-                                        <label>Username: {{user.username}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Email: {{user.email}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Role: {{user?.role?.name}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Description: {{user.description}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Summoner Name: {{user.summonerName}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Display Name: {{user.displayName}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Team: {{user?.teamID?.tag}} - {{user?.teamID?.name}}</label>
-                                    </div>
-                                    <div class="row">
-                                        <label>Free agent: {{user.freeAgent}}</label>
+                                        <div class="col s6">
+                                            <div class="row">
+                                                <label>Username: {{user.username}}</label>
+                                            </div>
+                                            <div class="row">
+                                                <label>Email: {{user.email}}</label>
+                                            </div>
+                                            <div class="row">
+                                                <label>Role: {{user?.role?.name}}</label>
+                                            </div>
+                                            <div class="row">
+                                                <label>Description: {{user.description}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col s6">
+                                            <div class="row">
+                                                <label>Summoner Name: {{user.summonerName}}</label>
+                                            </div>
+                                            <div class="row">
+                                                <label>Team: {{user?.team?.tag}} - {{user?.team?.name}}</label>
+                                            </div>
+                                            <div class="row">
+                                                <label>Free agent: {{user.freeAgent}}</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <button mat-flat-button color="warn" type="button" (click)="openDialog(user, 'deactivate')">Deactivate</button>
@@ -74,12 +77,6 @@
                                                 <input matInput name="summonerName" #name="ngModel" [(ngModel)]="userEdit.summonerName" type="text" value={{userEdit.summonerName}}>
                                             </mat-form-field>
                                         </div>
-                                        <div class="row">
-                                            <mat-form-field>
-                                                <mat-label>Display Name</mat-label>
-                                                <input matInput name="displayName" #name="ngModel" [(ngModel)]="userEdit.displayName" type="text" value={{userEdit.displayName}}>
-                                            </mat-form-field>
-                                        </div>
                                         
                                         <div class="row">
                                                 <label>Free Agent</label>
@@ -101,7 +98,7 @@
                                             <mat-card-title>Team History</mat-card-title>
                                         </mat-card-header>
                                         <mat-card-content>
-                                            <table mat-table [dataSource]="user.previousTeamIDs">
+                                            <table mat-table [dataSource]="user.previousTeams">
                                                 <ng-container matColumnDef="name">
                                                     <th mat-header-cell *matHeaderCellDef>Name</th>
                                                     <td mat-cell *matCellDef="let team">{{team.name}}</td>
@@ -118,7 +115,7 @@
                                             <mat-card-title>Tournament History</mat-card-title>
                                         </mat-card-header>
                                         <mat-card-content>
-                                            <table mat-table [dataSource]="user.recentTournaments">
+                                            <table mat-table [dataSource]="user.previousTournaments">
                                                 <ng-container matColumnDef="name">
                                                     <th mat-header-cell *matHeaderCellDef>Name</th>
                                                     <td mat-cell *matCellDef="let tournament">{{tournament.name}}</td>
@@ -135,7 +132,7 @@
                                             <mat-card-title>Match History</mat-card-title>
                                         </mat-card-header>
                                         <mat-card-content>
-                                            <table mat-table [dataSource]="user.recentMatches">
+                                            <table mat-table [dataSource]="user.previousMatches">
                                                 <ng-container matColumnDef="name">
                                                     <th mat-header-cell *matHeaderCellDef>Name</th>
                                                     <td mat-cell *matCellDef="let match">{{match.name}}</td>

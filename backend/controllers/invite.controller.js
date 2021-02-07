@@ -102,7 +102,14 @@ router.delete('/:id', (req, res) => {
         if (!err) { res.send(doc); }
         else { console.log('Error updating team: ' + JSON.stringify(err, undefined, 2)); }
     });
-})
+});
+
+router.delete('/', (req, res) => {
+    Invite.deleteMany({}, (err, doc) => {
+      if (!err) { res.send(doc); }
+      else { console.log('Error deleting invites : ' + JSON.stringify(err, undefined, 2)); }
+    });
+  });
 
 
 //#endregion
