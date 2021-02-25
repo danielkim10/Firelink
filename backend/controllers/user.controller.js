@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
-  User.findById(req.params.id, (err, doc) => {
+  User.findById(req.params.id, {hash: 0, salt: 0}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving user: ' + JSON.stringify(err, undefined, 2));
   }).populate('role').populate('team').populate('previousTeams').populate('tournaments')
@@ -34,8 +34,15 @@ router.get('/:id', (req, res) => {
 
 //#region Post
 
-router.post('/noTeam', (req, res) => {
+router.post('/freeAgents', (req, res) => {
   User.find({teamID: null, freeAgent: true}, (err, doc) => {
+    if (!err) res.send(doc);
+    else console.log('Error in retrieving users: ' + JSON.stringify(err, undefined, 2));
+  }).populate('role');
+});
+
+router.post('/tournamentMasters', (req, res) => {
+  User.find({role: req.body}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving users: ' + JSON.stringify(err, undefined, 2));
   }).populate('role');
@@ -129,6 +136,7 @@ router.put('/addToTeam/:id', (req, res) => {
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   var user = {
     team: req.body.team._id,
+    teamJoinDate: new Date(),
     freeAgent: false,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
@@ -142,9 +150,10 @@ router.put('/removeFromTeam/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
-  req.body.previousTeamIDs.push(req.body.teamID._id);
+  req.body.previousTeams.push(req.body.team._id);
   var user = {
     team: null,
+    teamJoinDate: null,
     previousTeams: req.body.previousTeams,
   };
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { User, Role, Team, Invite, Notification } from '../../services/models';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { User, Role, Team, Invite, Notification, Tournament, Match } from '../../services/models';
 import { UserService } from '../../services/user-service/user.service';
 import { TeamService } from '../../services/team-service/team.service';
 import { RoleService } from '../../services/role-service/role.service';
@@ -52,6 +54,7 @@ export class UserProfileComponent implements OnInit {
     flexLosses: -1,
 
     team: null,
+    teamJoinDate: null,
     previousTeams: [],
     tournaments: [],
     previousTournaments: [],
@@ -72,6 +75,7 @@ export class UserProfileComponent implements OnInit {
     name: '',
     tag: '',
     logo: '',
+    description: '',
     twitchUrl: '',
     twitterUrl: '',
     youtubeUrl: '',
@@ -104,9 +108,17 @@ export class UserProfileComponent implements OnInit {
   invites: Array<any>;
   selectedInvite: String;
 
-  displayedColumnsTeams: string[] = [];
-  displayedColumnsTourn: string[] = [];
-  displayedColumnsMatch: string[] = [];
+  previousTeams = new MatTableDataSource<Team>();
+  previousTournaments = new MatTableDataSource<Tournament>();
+  previousMatches = new MatTableDataSource<Match>();
+
+  displayedColumnsTeams: string[] = ['icon', 'tag', 'name', 'joinDate', 'leftDate', 'action'];
+  displayedColumnsTourn: string[] = ['name', 'place', 'startDate', 'endDate', 'action'];
+  displayedColumnsMatch: string[] = ['name', 'tournament', 'date', 'action'];
+
+  @ViewChild(MatPaginator, { static: true }) teamPaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) tournPaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) matchPaginator: MatPaginator;
 
   constructor(
     private router: Router, 
@@ -117,6 +129,9 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userDetails = this.authenticationService.getUserDetails();
+    this.previousTeams.paginator = this.teamPaginator;
+    this.previousTournaments.paginator = this.tournPaginator;
+    this.previousMatches.paginator = this.matchPaginator;
     this.update(this.userDetails);
   }
 
@@ -131,14 +146,8 @@ export class UserProfileComponent implements OnInit {
       for (let notification in this.user.readNotifications) {
         this.notifications.push(this.user.readNotifications[notification]);
       }
-      this.roleService.getAdminRoles(false).subscribe((adminRoles: [Role]) => {
+      this.roleService.getRolesByAlt().subscribe((adminRoles: [Role]) => {
         this.roles = adminRoles;
-
-        this.displayedColumnsTeams.push('name');
-        this.displayedColumnsTourn.push('name');
-        this.displayedColumnsMatch.push('name');
-
-        
       });
     });
   }

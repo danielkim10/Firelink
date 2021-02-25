@@ -31,6 +31,7 @@ export interface User {
     flexLosses: Number,
 
     team: Team,
+    teamJoinDate: Date,
     previousTeams: Array<Team>,
     tournaments: Array<Tournament>,
     previousTournaments: Array<Tournament>,
@@ -48,6 +49,7 @@ export interface Team {
   name: String;
   tag: String;
   logo: String;
+  description: String;
   twitchUrl: String,
   twitterUrl: String,
   youtubeUrl: String,

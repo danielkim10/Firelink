@@ -1,17 +1,19 @@
 <h2 mat-dialog-title *ngIf="data.type === 'invite'">Invite</h2>
 <h2 mat-dialog-title *ngIf="data.type === 'status'">Status</h2>
 <h2 mat-dialog-title *ngIf="data.type === 'add'">Add</h2>
-<h2 mat-dialog-title *ngIf="data.type === 'kick'">Kick </h2>
+<h2 mat-dialog-title *ngIf="data.type === 'leave'">Leave</h2>
+<h2 mat-dialog-title *ngIf="data.type === 'kick'">Kick</h2>
+<h2 mat-dialog-title *ngIf="data.type === 'disband'">Disband</h2>
 <mat-dialog-content>
     <div *ngIf="data.type === 'invite'">
-        <div class="row">
-                <div class="row">
+        <div>
+                <div>
                     <mat-form-field>
                         <mat-label>Subject</mat-label>
                         <input matInput name="subject" #name="ngModel" [(ngModel)]="invite.subject" value={{invite.subject}} placeholder="Enter subject here">
                     </mat-form-field>
                 </div>
-                <div class="row">
+                <div>
                     <mat-form-field>
                         <mat-label>Message</mat-label>
                         <textarea matInput name="message" #name="ngModel" [(ngModel)]="invite.message" value={{invite.message}} placeholder="Enter message here"></textarea>
@@ -20,8 +22,8 @@
         </div>
     </div>
     <div *ngIf="data.type === 'status'">
-        <div class="row">
-            <label>Change status for {{this.data.member.username}}</label>
+        <div>
+            <label>Change status for {{this.data.user.username}}</label>
 
             <mat-select [(value)]="status">
                 <mat-option *ngFor="let status of statuses" [value]="status">
@@ -31,13 +33,30 @@
         </div>
     </div>
     <div *ngIf="data.type === 'add'">
-        <div class="row">
-            <label>Add user {{this.data.member.username}}?</label>
+        <div>
+            <label>Add user {{this.data.user.username}}?</label>
+        </div>
+    </div>
+    <div *ngIf="data.type === 'leave'">
+        <div *ngIf="data.team.owner._id === data.user._id">
+            <label>Reassign</label>
+        </div>
+        <div *ngIf="data.team.owner._id !== data.user._id">
+            <label>Once you leave, you will not be able to join unless re-invited</label>
         </div>
     </div>
     <div *ngIf="data.type === 'kick'">
-        <div class="row">
-            <label>Kick user {{this.data.member.username}}?</label>
+        <div>
+            <label>Kick user {{this.data.user.username}}?</label>
+        </div>
+    </div>
+    <div *ngIf="data.type === 'disband'">
+        <div>
+            <label>Disband team?</label>
+            <label>To disband the team, enter the team name (case sensitive). This action is irreversible.</label>
+            <mat-form-field>
+                <input matInput name="team" #name="ngModel" [(ngModel)]="team" value={{team}} placeholder="Enter team name here">
+            </mat-form-field>
         </div>
     </div>
 </mat-dialog-content>

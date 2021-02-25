@@ -8,6 +8,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { TeamSearchComponent } from './components/team-search/team-search.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
 import { TournamentDetailsComponent } from './components/tournament-details/tournament-details.component';
+import { TournamentSearchComponent } from './components/tournament-search/tournament-search.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'teamsearch', component: TeamSearchComponent },
   { path: 'usersearch', component: UserSearchComponent },
   { path: 'tournament', component: TournamentDetailsComponent },
+  { path: 'tournamentsearch', component: TournamentSearchComponent },
 ];
 
 @NgModule({

@@ -17,6 +17,18 @@ export class RoleService {
     return this.httpClient.get(this.baseUrl + id);
   }
 
+  getRolesByAlt() {
+    return this.httpClient.get(this.baseUrl + 'rolesByAlt');
+  }
+
+  getRolesByName(name: String) {
+    return this.httpClient.post(this.baseUrl + 'roleName', {name});
+  }
+
+  getRoleByNameAndAlt(name: String, alt: String) {
+    return this.httpClient.post(this.baseUrl + 'roleNameAndAlt', {name, alt});
+  }
+
   getAdminRoles(bool: Boolean) {
     return this.httpClient.post(this.baseUrl + 'admin', {admin: bool});
   }

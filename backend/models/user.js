@@ -3,45 +3,39 @@ const Schema = mongoose.Schema;
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
-var Team = require('./team');
-var Role = require('./role');
-var Tournament = require('./tournament');
-var Match = require('./match');
-var Notification = require('./notification');
-var Invite = require('./invite');
-
 var userSchema = new Schema({
-  username: String,
-  email: String,
+  username: { type: String, unique: true, required: true},
+  email: { type: String, unique: true, required: true },
   role: { type: Schema.Types.ObjectId, ref: 'Role' },
   description: String,
   twitchUrl: String,
   twitterUrl: String,
   youtubeUrl: String,
   discordTag: String,
-  active: Boolean,
-  freeAgent: Boolean,
+  active: { type: Boolean, required: true },
+  freeAgent: { type: Boolean, required: true },
 
   summonerName: String,
-  summonerId: String,
-  puuid: String,
+  summonerId: String, //summonerId
+  puuid: String, //puuid
   summonerLevel: Number,
   profileIconId: Number,
-  lastUpdated: Date,
+  lastUpdated: Date, 
 
-  soloTier: String,
-  soloRank: { type: Schema.Types.ObjectId, ref: 'Rank' },
-  soloLP: Number,
-  soloWins: Number,
-  soloLosses: Number,
+  soloTier: String, //tier
+  soloRank: { type: Schema.Types.ObjectId, ref: 'Rank' }, //rank
+  soloLP: Number, //leaguePoints
+  soloWins: Number, //wins
+  soloLosses: Number, //losses
 
-  flexTier: String,
-  flexRank: { type: Schema.Types.ObjectId, ref: 'Rank' },
-  flexLP: Number,
-  flexWins: Number,
-  flexLosses: Number,
+  flexTier: String, //tier
+  flexRank: { type: Schema.Types.ObjectId, ref: 'Rank' }, //rank
+  flexLP: Number, //leaguePoints
+  flexWins: Number, //wins
+  flexLosses: Number, //losses
 
   team: { type: Schema.Types.ObjectId, ref: 'Team' },
+  teamJoinDate: Date,
   previousTeams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   tournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   previousTournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],

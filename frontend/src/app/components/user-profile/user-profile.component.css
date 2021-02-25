@@ -26,3 +26,22 @@
     border-bottom: 1px;
     border-color: black;
 }
+
+.center{
+    width: 80%;
+    margin: 2em auto;
+}
+
+table{
+    width: 100%;
+}
+
+.label-spacing{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.mat-divider{
+    width: 100%;
+    border-top-color: red;
+}

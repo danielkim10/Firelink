@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var Team = require('./team');
-var Tournament = require('./tournament');
-var User = require('./user');
-
 var inviteSchema = new Schema({
     sender: { type: Schema.Types.ObjectId, refPath: 'senderType' },
     senderType: { type: String, enum: ['Team', 'Tournament'] },

@@ -54,12 +54,25 @@ module.exports.register = function(req, res) {
 
     user.setPassword(req.body.password);
     user.save((err) => {
+        if (err) {
+            if (err.keyPattern.username) {
+                res.status(401).send('Username already in use');
+            }
+            else if (err.keyPattern.email) {
+                res.status(401).send('Email already in use');
+            }
+            else {
+                res.status(400).send('Bad request');
+            }
+        }
+        else {
         var token;
         token = user.generateJwt();
         res.status(200);
         res.json({
             "token": token
         });
+    }
     });
 };
 
@@ -68,11 +81,11 @@ module.exports.login = function(req, res) {
         var token;
 
         if (err) {
-            res.status(400).json(err);
+            res.status(400).send('Bad request');
             return;
         }
-        if (!user.active) {
-            res.status(400).json(err);
+        else if (user && !user.active) {
+            res.status(400).send('The specified user is no longer active');
             return;
         }
 
@@ -84,7 +97,7 @@ module.exports.login = function(req, res) {
             });
         }
         else {
-            res.status(401).json(info);
+            res.status(401).send('Invalid credentials');
         }
     }) (req, res);
 };

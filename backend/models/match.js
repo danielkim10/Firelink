@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var matchSchema = new Schema({
-  gameIDs: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
-  tournamentID: { type: Schema.Types.ObjectId, ref: 'Tournament' },
+  games: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+  tournament: { type: Schema.Types.ObjectId, ref: 'Tournament' },
   teamA: { type: Schema.Types.ObjectId, ref: 'Team' },
   teamB: { type: Schema.Types.ObjectId, ref: 'Team' },
   date: Date,

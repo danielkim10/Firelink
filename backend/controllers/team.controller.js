@@ -21,11 +21,12 @@ router.get('/:id', (req, res) => {
   
   Team.findById(req.params.id, (err, doc) => {
     if (!err) res.send(doc);
-    else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
+    else console.log('Error in retrieving team1: ' + JSON.stringify(err, undefined, 2));
   }).populate('owner').populate('managers').populate({ path: 'playerRoster', populate: { path: 'role' }}).populate('coachRoster')
+    .populate('averageRank')
     .populate('previousMembers').populate('previousMatches').populate('previousTournaments')
     .populate('incomingInvites').populate('outgoingInvites').populate('incomingApplications').exec((err, team) => {
-      if (err) return handleError(err);
+      if (err) console.log('Error in retrieving team2: ' + JSON.stringify(err, undefined, 2));
     });
 });
 
@@ -51,6 +52,7 @@ router.post('/', (req, res) => {
     name: req.body.team.name,
     tag: req.body.team.tag,
     logo: req.body.team.logo,
+    description: req.body.team.description,
     twitchUrl: req.body.team.twitchUrl,
     twitterUrl: req.body.team.twitterUrl,
     youtubeUrl: req.body.team.youtubeUrl,
@@ -64,10 +66,11 @@ router.post('/', (req, res) => {
     managers: req.body.team.managers,
     playerRoster: req.body.team.playerRoster,
     coachRoster: req.body.team.coachRoster,
+    averageRank: null,
     
     previousMembers: req.body.team.previousMembers,
-    previousMatches: req.body.team.matchHistory,
-    tournamentHistory: req.body.team.tournamentHistory,
+    previousMatches: req.body.team.previousMatches,
+    previousTournaments: req.body.team.previousTournaments,
     
     incomingInvites: [],
     outgoingInvites: [],
@@ -108,6 +111,7 @@ router.put('/find/:id', (req, res) => {
     name: req.body.name,
     tag: req.body.tag,
     logo: req.body.logo,
+    description: req.body.description,
     twitchUrl: req.body.twitchUrl,
     twitterUrl: req.body.twitterUrl,
     youtubeUrl: req.body.youtubeUrl,
@@ -173,10 +177,14 @@ router.put('/leave/:id', (req, res) => {
     req.body.team.coachRoster.splice(req.body.team.coachRoster.indexOf(req.body.team.coachRoster.find(e => e._id === req.body.user._id), 1));
   }
 
+  //previousMembers
+  req.body.team.previousMembers.push({user: req.body.user._id, joinDate: req.body.user.teamJoinDate, leftDate: new Date()});
+
   var team = {
     managers: req.body.team.managers,
     playerRoster: req.body.team.playerRoster,
     coachRoster: req.body.team.coachRoster,
+    previousMembers: req.body.team.previousMembers,
   };
 
   Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {
@@ -197,7 +205,7 @@ router.put('/disband/:id', (req, res) => {
     playerRoster: [],
     coachRoster: [],
     active: false,
-    activeRecruiting: false,
+    activelyRecruiting: false,
     dateDisbanded: new Date(),
   };
   Team.findByIdAndUpdate(req.params.id, {$set: team}, {new: true}, (err, doc) => {

@@ -18,10 +18,6 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/profile']);
   }
 
-  notifications() {
-    this.router.navigate(['/notifications']);
-  }
-
   team() {
     this.router.navigate(['/team']);
   }

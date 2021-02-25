@@ -30,7 +30,7 @@ export class TeamService {
   }
 
   editTeam(team: Team) {
-    return this.httpClient.put(this.baseUrl + team._id, team);
+    return this.httpClient.put(this.baseUrl + 'find/' + team._id, team);
   }
 
   leaveTeam(object: any) {

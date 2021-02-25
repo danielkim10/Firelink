@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/home']);
       }, (err) => {
         this.clearPassword();
+        this.invalidPassword = err.error;
         console.error(err);
       });
     }

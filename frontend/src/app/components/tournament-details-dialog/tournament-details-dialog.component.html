@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{data.tournament.name}}</h2>
+<mat-dialog-content>
+    <div class="row">
+        {{data.tournament.name}}
+    </div>
+    <div class="row">
+        {{data.tournament._id}}
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button *ngIf="data.user.role.name !== 'Tournament Master'" [mat-dialog-close]="true" cdkFocusInitial (click)="confirmAction('yes')">Register</button>
+    <button mat-button *ngIf="data.user.role.name === 'Tournament Master'" [mat-dialog-close]="true" cdkFocusInitial (click)="confirmAction('no')">Edit</button>
+</mat-dialog-actions>

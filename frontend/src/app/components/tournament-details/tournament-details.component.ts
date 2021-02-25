@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../services/user-service/user.service';
@@ -9,6 +9,7 @@ import { InviteService } from '../../services/invite-service/invite.service';
 import { NotificationService } from '../../services/notification-service/notification.service';
 import { TournamentService } from '../../services/tournament-service/tournament.service';
 import { RankService } from '../../services/rank-service/rank.service';
+import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog.component';
 import { User, Role, Team, Invite, Tournament, Rank } from '../../services/models';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -29,6 +30,10 @@ const colors: any = {
   yellow: {
     primary: '#e3bc08',
     secondary: '#FDF1BA'
+  },
+  purple: {
+    primary: '#6a0dad',
+    secondary: '#7F00FF'
   }
 }
 
@@ -53,10 +58,11 @@ export class TournamentDetailsComponent implements OnInit {
   activeDayIsOpen: boolean = false;
 
   ranks: Array<Rank> = [];
+  roles: Array<Role> = [];
   tournaments: Array<Tournament> = [];
   participantTypes: Array<String> = ['Team', 'Individual'];
   participantOptions: Array<Number> = [2, 4, 8, 16, 32, 64];
-  formats: Array<String> = ['Single Elimination', 'Double Elimination', 'Groups'];
+  formats: Array<String> = ['5v5 Single Elimination', '5v5 Double Elimination', '5v5 Groups', '1v1 Single Elimination', '1v1 Double Elimination', '1v1 Groups'];
   privacyTypes: Array<String> = ['Public', 'Private'];
   tournament: Tournament = {
     _id: '',
@@ -107,6 +113,7 @@ export class TournamentDetailsComponent implements OnInit {
     flexLosses: -1,
 
     team: null,
+    teamJoinDate: null,
     previousTeams: [],
     tournaments: [],
     previousTournaments: [],
@@ -118,6 +125,9 @@ export class TournamentDetailsComponent implements OnInit {
     
     emailVerified: false,
   }
+
+  tournamentMasters: Array<User> = [];
+  tournamentMasterSelect = new FormControl();
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
     private userService: UserService, private teamService: TeamService, private roleService: RoleService,
@@ -149,7 +159,16 @@ export class TournamentDetailsComponent implements OnInit {
         this.tournamentService.getTournaments().subscribe((tournamentData: [Tournament]) => {
           this.tournaments = tournamentData;
           this.manageEvents(tournamentData);
-        })
+
+          this.roleService.getRoleByNameAndAlt('Tournament Master', 'Tournament Master').subscribe((role: Role) => {
+            console.log(role);
+            this.userService.getTournamentMasters(role).subscribe((tournamentMasters: [User]) => {
+              this.tournamentMasters = tournamentMasters;
+              console.log(tournamentMasters);
+              //this.tournamentMasterSelect.setValue(this.user);
+            });
+          });
+        });
       });
     });
   }
@@ -157,10 +176,14 @@ export class TournamentDetailsComponent implements OnInit {
   manageEvents(tournamentData: Array<Tournament>) {
     for (let i = 0; i < tournamentData.length; i++) {
       this.events.push({
+        id: i,
         start: new Date(tournamentData[i].startDate), 
         end: new Date(tournamentData[i].endDate), 
         title: tournamentData[i].name.toString(),
-        color: i % 3 == 0 ? colors.blue : (i % 3 == 1 ? colors.red : colors.yellow)
+        color: tournamentData[i].status === 'Not Started' ? colors.yellow 
+          : tournamentData[i].status === 'Cancelled' ? colors.red 
+          : tournamentData[i].status === 'Ended' ? colors.purple 
+          : colors.blue
       });
     }
     console.log(this.events);
@@ -219,14 +242,23 @@ export class TournamentDetailsComponent implements OnInit {
   }
 
   handleEvent(action: String, event: CalendarEvent) {
-    this.defaultMode = false;
-    this.viewMode = true;
+    this.openDialog(this.tournaments[event.id], 'ab', this.user);
   }
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
 
-  openDialog() {
+  openDialog(tournament: Tournament, type: String, user: User) {
+    const dialogRef = this.dialog.open(TournamentDetailsDialogComponent, {
+      data: {
+        type: type,
+        tournament: tournament,
+        user: user,
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(res => {
+      console.log(`Result: ${res}`);
+    });
   }
 }

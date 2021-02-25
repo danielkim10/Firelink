@@ -20,3 +20,12 @@ table {
     justify-content: center;
     align-items: center;
 }
+
+.center{
+    width: 80%;
+    margin: 2em auto;
+}
+
+.logo-table{
+    width: 200px !important;
+}

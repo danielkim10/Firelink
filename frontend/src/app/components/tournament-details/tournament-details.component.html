@@ -20,6 +20,9 @@
                                 </div>
                             </div>
                             <br/>
+                            <div>
+                                You have {{events.length}} events in your calendar
+                            </div>
                             <div *ngIf="inCalendarView">
                                 <div [ngSwitch]="view">
                                     <mwl-calendar-month-view 
@@ -45,6 +48,14 @@
                             <mat-form-field>
                                 <mat-label>Description</mat-label>
                                 <input matInput name="description" #name="ngModel" [(ngModel)]="tournament.description" value={{tournament.description}} placeholder="Enter tournament description">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Tournament Masters</mat-label>
+                                <mat-select multiple [formControl]="tournamentMasterSelect">
+                                    <mat-option *ngFor="let tournamentMaster of tournamentMasters" [value]="tournamentMaster">{{tournamentMaster.username}}</mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </div>
                         <div>

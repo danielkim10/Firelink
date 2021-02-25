@@ -1,18 +1,16 @@
 <mat-toolbar color="primary" class="navbar">
     <div (click)="profile()">Profile</div>
-    <div (click)="notifications()">Notifications</div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="team()">Team</div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="userSearch()">User Search</div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="teamSearch()">Team Search</div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="tournament()">Tournament</div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="tournamentSearch()">Tournament Search</div>
-    <div #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu" (mouseover)="mouseover()" (mouseout)="mouseout()" >
-        Ja
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>User Search</button>
-            <button mat-menu-item>Profile</button>
-        </mat-menu>
-    </div>
+    <mat-divider [vertical]="true"></mat-divider>
     <div (click)="logout()">Logout</div>
 </mat-toolbar>
 <router-outlet></router-outlet>

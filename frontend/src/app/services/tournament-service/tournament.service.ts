@@ -22,7 +22,19 @@ export class TournamentService {
   }
 
   saveTournament(tournament: Tournament) {
-    return this.httpClient.post(this.baseUrl + tournament._id, tournament);
+    return this.httpClient.put(this.baseUrl + tournament._id, tournament);
+  }
+
+  addParticipantToTournament(object: any) {
+    return this.httpClient.put(this.baseUrl + 'addParticipantToTournament/' + object.tournament._id, object);
+  }
+
+  removeParticipantFromTournament(object: any) {
+    return this.httpClient.put(this.baseUrl + 'removeParticipantFromTournament/' + object.tournament._id, object);
+  }
+
+  cancelTournament(tournament: Tournament) {
+    return this.httpClient.put(this.baseUrl + 'cancelTournament/' + tournament._id, tournament);
   }
 
   deleteTournament(id: String) {

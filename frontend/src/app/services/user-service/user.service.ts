@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../models';
+import { User, Role } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,11 @@ export class UserService {
   }
 
   getFreeAgents() {
-    return this.httpClient.post(this.baseUrl + 'noTeam', null);
+    return this.httpClient.post(this.baseUrl + 'freeAgents', null);
+  }
+
+  getTournamentMasters(role: Role) {
+    return this.httpClient.post(this.baseUrl + 'tournamentMasters', role);
   }
 
   saveUser(user: User) {

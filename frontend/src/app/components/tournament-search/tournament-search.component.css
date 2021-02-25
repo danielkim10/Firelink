@@ -1,0 +1,15 @@
+.mat-card{
+    width: 80%;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-paginator {
+    width: 100%;
+}
+
+.center {
+    margin: 2em auto;
+}
