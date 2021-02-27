@@ -125,7 +125,7 @@ export class TournamentDetailsComponent implements OnInit {
     
     emailVerified: false,
   }
-
+  selectedTournament: Tournament = null;
   tournamentMasters: Array<User> = [];
   tournamentMasterSelect = new FormControl();
 
@@ -181,7 +181,7 @@ export class TournamentDetailsComponent implements OnInit {
         end: new Date(tournamentData[i].endDate), 
         title: tournamentData[i].name.toString(),
         color: tournamentData[i].status === 'Not Started' ? colors.yellow 
-          : tournamentData[i].status === 'Cancelled' ? colors.red 
+          : tournamentData[i].status === 'Canceled' ? colors.red 
           : tournamentData[i].status === 'Ended' ? colors.purple 
           : colors.blue
       });
@@ -249,6 +249,8 @@ export class TournamentDetailsComponent implements OnInit {
   }
 
   openDialog(tournament: Tournament, type: String, user: User) {
+    this.selectedTournament = tournament;
+    console.log(this.selectedTournament);
     const dialogRef = this.dialog.open(TournamentDetailsDialogComponent, {
       data: {
         type: type,

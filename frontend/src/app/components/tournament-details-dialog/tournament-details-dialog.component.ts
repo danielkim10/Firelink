@@ -22,6 +22,8 @@ export class TournamentDetailsDialogComponent implements OnInit {
   }
 
   confirmAction(type: String) {
-
+    if (type === 'no') {
+      
+    }
   }
 }

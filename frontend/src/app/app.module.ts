@@ -42,6 +42,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { TournamentDetailsDialogComponent } from './components/tournament-details-dialog/tournament-details-dialog.component';
 import { TournamentSearchComponent } from './components/tournament-search/tournament-search.component';
+import { TournamentViewComponent } from './components/tournament-view/tournament-view.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { TournamentSearchComponent } from './components/tournament-search/tourna
     UserProfileDialogComponent,
     NavbarComponent,
     TournamentDetailsDialogComponent,
-    TournamentSearchComponent
+    TournamentSearchComponent,
+    TournamentViewComponent
   ],
   imports: [
     BrowserModule,
