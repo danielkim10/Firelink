@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
-  User.findById(req.params.id, {hash: 0, salt: 0}, (err, doc) => {
+  User.findById(req.params.id, {summonerId: 0, puuid: 0, hash: 0, salt: 0}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving user: ' + JSON.stringify(err, undefined, 2));
   }).populate('role').populate('team').populate('previousTeams').populate('tournaments')
@@ -79,6 +79,7 @@ router.put('/:id', (req, res) => {
     summonerLevel: req.body.summonerLevel,
     profileIconId: req.body.profileIconId,
     lastUpdated: req.body.lastUpdated,
+    
 
     soloTier: req.body.soloTier,
     soloRank: req.body.soloRank,

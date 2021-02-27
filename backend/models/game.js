@@ -2,11 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var gameSchema = new Schema({
-    teamA: { type: Schema.Types.ObjectId, refPath: 'Team' },
-    teamARoster: [{ type: Schema.Types.ObjectId, refPath: 'User' }],
-    teamB: { type: Schema.Types.ObjectId, refPath: 'Team' },
-    teamBRoster: [{ type: Schema.Types.ObjectId, refPath: 'User' }],
+    teamA: { type: Schema.Types.ObjectId, refPath: 'Team', required: true },
+    teamARoster: [{ type: Schema.Types.ObjectId, refPath: 'User', required: true }],
+    teamB: { type: Schema.Types.ObjectId, refPath: 'Team', required: true },
+    teamBRoster: [{ type: Schema.Types.ObjectId, refPath: 'User', required: true }],
+    gameNumber: { type: Number, required: true },
     riotGameID: Number,
+    gameCreation: Number,
+    gameDuration: Number,
+    gameVersion: Number,
     status: { type: Number, required: true },
 });
 

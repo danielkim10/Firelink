@@ -52,6 +52,8 @@ router.post('/', (req, res) => {
     privacy: req.body.privacy,
     rankRestrictionLB: req.body.rankRestrictionLB,
     rankRestrictionUB: req.body.rankRestrictionUB,
+    outgoingInvites: req.body.outgoingInvites,
+    incomingApplications: req.body.incomingApplications,
     status: req.body.status
   });
   tournament.save((err, doc) => {
@@ -82,6 +84,8 @@ router.put('/:id', (req, res) => {
     privacy: req.body.privacy,
     rankRestrictionLB: req.body.rankRestrictionLB,
     rankRestrictionUB: req.body.rankRestrictionUB,
+    outgoingInvites: req.body.outgoingInvites,
+    incomingApplications: req.body.incomingApplications,
     status: req.body.status
   };
   Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
@@ -90,19 +94,96 @@ router.put('/:id', (req, res) => {
   });
 });
 
+// add participant to tournament with _id
 router.put('/addParticipantToTournament/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  
+  req.body.tournament.participants.push(req.body.participant._id);
+  var tournament = {
+    participants: req.body.tournament.participants
+  };
+  Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
 });
 
+// remove participant from tournament with _id
 router.put('/removeParticipantFromTournament/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  
+  if (req.body.tournament.participants.some(e => e._id === req.body.participant._id)) {
+    req.body.tournament.participants.splice(req.body.tournament.participants.indexOf(req.body.tournament.participants.find(e => e._id === req.body.participant._id), 1));
+  }
+  else {
+    console.log('Error updating tournament');
+    return;
+  }
+  var tournament = {
+    participants: req.body.tournament.participants
+  };
+  Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
 });
 
+// create invite for tournament with _id
+router.put('/createInviteForTournament/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  }
+  req.body.tournament.outgoingInvites.push(req.body.invite._id);
+  var tournament = {
+    outgoingInvites: req.body.tournament.outgoingInvites,
+  }
+
+  Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+// accept or reject a tournament application with _id
+router.put('/handleApplication/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  }
+
+});
+
+// add match to tournament with _id
+router.put('/addMatchToTournamnent/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  }
+
+  req.body.tournament.matches.push(req.body.match._id);
+  var tournament = {
+    matches: req.body.tournament.matches,
+  }
+
+  Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
+
+// cancel tournament with _id
 router.put('/cancelTournament/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No tournament with given id: ${req.params.id}`);
+  var tournament = {
+    active: false,
+    status: 'Canceled'
+  };
+
+  Tournament.findByIdAndUpdate(req.params.id, { $set: tournament }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating tournament: ' + JSON.stringify(err, undefined, 2)); }
+  });
 });
 
 //#endregion

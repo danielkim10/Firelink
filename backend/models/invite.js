@@ -6,11 +6,11 @@ var inviteSchema = new Schema({
     senderType: { type: String, enum: ['Team', 'Tournament'] },
     recipient: { type: Schema.Types.ObjectId, refPath: 'recipientType' },
     recipientType: { type: String, enum: ['Team', 'User'] },
-    date: Date,
-    subject: String,
-    message: String,
-    responseReceived: Boolean,
-    opened: Boolean,
+    date: { type: Date, required: true },
+    subject: { type: String, required: true },
+    message: { type: String, required: true },
+    responseReceived: { type: Boolean, required: true },
+    opened: { type: Boolean, required: true },
 });
 
 const Invite = mongoose.model('Invite', inviteSchema);

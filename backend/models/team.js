@@ -2,31 +2,26 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var teamSchema = new Schema({
-  name: String,
-  tag: String,
-  logo: String,
+  name: { type: String, required: true },
+  tag: { type: String, required: true },
+  logo: { type: String, required: true },
   description: String,
   twitchUrl: String,
   twitterUrl: String,
   youtubeUrl: String,
   discordUrl: String,
-  active: Boolean,
-  activelyRecruiting: Boolean,
-  dateCreated: Date,
+  active: { type: Boolean, required: true },
+  activelyRecruiting: { type: Boolean, required: true },
+  dateCreated: { type: Date, required: true },
   dateDisbanded: Date,
 
-  owner: { type: Schema.Types.ObjectId, ref: 'User' },
-  managers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  playerRoster: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  coachRoster: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  owner: { type: Schema.Types.ObjectId, ref: 'TeamMember' },
+  managers: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
+  playerRoster: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
+  coachRoster: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
   averageRank: { type: Schema.Types.ObjectId, ref: 'Rank' },
 
-  previousMembers: [
-    { user: { type: Schema.Types.ObjectId, ref: 'User' },
-      joinDate: Date,
-      leftDate: Date,
-    }
-  ],
+  previousMembers: [{ type: Schema.Types.ObjectId, ref: 'TeamMember'}],
   previousMatches: [{ type: Schema.Types.ObjectId, ref: 'Match' }],
   previousTournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   

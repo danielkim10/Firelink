@@ -2,7 +2,9 @@ const express = require('express');
 var router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
-var { Game } = require('../models/game');
+var Game = require('../models/game');
+
+//#region Get
 
 router.get('/', (req, res) => {
   Game.find((err, docs) => {
@@ -21,6 +23,10 @@ router.get('/:id', (req, res) => {
   });
 });
 
+//#endregion
+
+//#region Post
+
 router.post('/', (req, res) => {
   var game = new Game({
     teamARoster: req.body.teamARoster,
@@ -33,6 +39,10 @@ router.post('/', (req, res) => {
     else { console.log('Error creating game: ' + JSON.stringify(err, undefined, 2)); }
   });
 });
+
+//#endregion
+
+//#region Put
 
 router.put('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
@@ -50,6 +60,10 @@ router.put('/:id', (req, res) => {
   });
 });
 
+//#endregion
+
+//#region Delete
+
 router.delete('/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No game with given id: ${req.params.id}`);
@@ -66,5 +80,7 @@ router.delete('/', (req, res) => {
     else { console.log('Error deleting games : ' + JSON.stringify(err, undefined, 2)); }
   });
 });
+
+//#endregion
 
 module.exports = router;

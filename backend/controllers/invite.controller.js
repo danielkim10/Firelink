@@ -29,8 +29,10 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     var invite = new Invite({
-        sender: req.body.senderId,
-        recipient: req.body.recipientId,
+        sender: req.body.sender,
+        senderType: req.body.senderType,
+        recipient: req.body.recipient,
+        recipientType: req.body.recipientType,
         date: new Date(),
         subject: req.body.invite.subject,
         message: req.body.invite.message,
