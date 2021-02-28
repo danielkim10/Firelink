@@ -116,3 +116,5 @@ router.delete('/', (req, res) => {
 });
 
 //#endregion
+
+module.exports = router;
