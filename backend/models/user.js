@@ -35,6 +35,7 @@ var userSchema = new Schema({
   flexLosses: Number, //losses
 
   team: { type: Schema.Types.ObjectId, ref: 'Team' },
+  teamJoinDate: Date,
   previousTeams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   tournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],
   previousTournaments: [{ type: Schema.Types.ObjectId, ref: 'Tournament' }],

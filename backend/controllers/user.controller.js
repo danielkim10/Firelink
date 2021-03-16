@@ -72,14 +72,24 @@ router.put('/:id', (req, res) => {
     twitterUrl: req.body.twitterUrl,
     youtubeUrl: req.body.youtubeUrl,
     discordTag: req.body.discordTag,
+  };
+  User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
+    if (!err) { res.send(doc); }
+    else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }
+  });
+});
 
+router.put('/updateSummonerInfo/:id', (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).send(`No user with given id: ${req.params.id}`);
+  
+  var user = {
     summonerName: req.body.summonerName,
     summonerId: req.body.summonerId,
     puuid: req.body.puuid,
     summonerLevel: req.body.summonerLevel,
     profileIconId: req.body.profileIconId,
     lastUpdated: req.body.lastUpdated,
-    
 
     soloTier: req.body.soloTier,
     soloRank: req.body.soloRank,
@@ -92,7 +102,8 @@ router.put('/:id', (req, res) => {
     flexLP: req.body.flexLP,
     flexWins: req.body.flexWins,
     flexLosses: req.body.flexLosses,
-  };
+  }
+
   User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, doc) => {
     if (!err) { res.send(doc); }
     else { console.log('Error updating user: ' + JSON.stringify(err, undefined, 2)); }

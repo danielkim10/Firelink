@@ -8,6 +8,11 @@ import { User, Role, Team, TeamMember } from '../models';
 export class UserService {
   readonly userUrl = 'http://localhost:3000/users/';
   readonly teamMemberUrl = 'http://localhost:3000/teamMembers/';
+  readonly NA1 = 'https://na1.api.riotgames.com';
+  readonly proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+  readonly summonerUrl = `${this.NA1}/lol/summoner/v4/summoners/by-name/`;
+  readonly rankedUrl = `${this.NA1}/lol/league/v4/entries/by-summoner/`;
+  readonly matchUrl = `${this.NA1}/lol/match/v4/`;
   constructor(private httpClient: HttpClient) { }
 
   getUser(id: String) {
@@ -32,6 +37,10 @@ export class UserService {
 
   saveUser(user: User) {
     return this.httpClient.put(this.userUrl + user._id, user);
+  }
+
+  updateSummonerInfo(user: User) {
+    return this.httpClient.put(this.userUrl + 'updateSummonerInfo/' + user._id, user);
   }
 
   createTeamMember(user: User, team: Team) {
