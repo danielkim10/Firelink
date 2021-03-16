@@ -83,6 +83,8 @@ router.put('/updateSummonerInfo/:id', (req, res) => {
   if (!ObjectId.isValid(req.params.id))
     return res.status(400).send(`No user with given id: ${req.params.id}`);
   
+
+    
   var user = {
     summonerName: req.body.summonerName,
     summonerId: req.body.summonerId,
