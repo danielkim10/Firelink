@@ -1,17 +1,56 @@
-<div class="row">
-    <div class="col s6">
+<div>
+    <div>
         <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <p>Free Agents</p>
+                </mat-card-title>
+            </mat-card-header>
             <mat-card-content>
-                <div class="row">
-                    <div class="col s12">
-                        <mat-selection-list #usersearch>
-                            <mat-list-option *ngFor="let user of users">
-                                {{user.username}}
-                            </mat-list-option>
-                        </mat-selection-list>
-                    </div>
+                <div>
+                    <table mat-table [dataSource]="freeAgents">
+                        <ng-container matColumnDef="username">
+                            <th mat-header-cell *matHeaderCellDef>Username</th>
+                            <td mat-cell *matCellDef="let user">{{user.username}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="summonerName">
+                            <th mat-header-cell *matHeaderCellDef>Summoner Name</th>
+                            <td mat-cell *matCellDef="let user">{{user.summonerName}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="rank">
+                            <th mat-header-cell *matHeaderCellDef>Rank</th>
+                            <td mat-cell *matCellDef="let user"></td>
+                        </ng-container>
+                        <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef>Preferred Position</th>
+                            <td mat-cell *matCellDef="let user"></td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                            <td mat-cell *matCellDef="let member">
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item>
+                                        <mat-icon>account_circle</mat-icon>
+                                        <span>View Profile</span>
+                                    </button>
+                                    <button mat-menu-item>
+                                        <mat-icon>add_circle_outline</mat-icon>
+                                        <span>Invite to Team</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsFreeAgents"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsFreeAgents;"></tr>
+                    </table>
                 </div>
-                <div class="row">
+                <div>
+                    
+                </div>
+                <div>
                     <button mat-flat-button color="warn" type="button" (click)="back()">Back</button>
                 </div>
             </mat-card-content>

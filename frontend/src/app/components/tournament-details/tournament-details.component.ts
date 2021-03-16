@@ -78,6 +78,9 @@ export class TournamentDetailsComponent implements OnInit {
     privacy: '',
     rankRestrictionLB: null,
     rankRestrictionUB: null,
+    outgoingInvites: [],
+    incomingApplications: [],
+    matches: [],
     status: '',
   }
   user: User = {
@@ -113,7 +116,6 @@ export class TournamentDetailsComponent implements OnInit {
     flexLosses: -1,
 
     team: null,
-    teamJoinDate: null,
     previousTeams: [],
     tournaments: [],
     previousTournaments: [],

@@ -31,54 +31,67 @@
                                         </div>
                                     </div>
                                     <div fxFlex="50%">
-                                        <div class="label-spacing">
-                                            <label>Summoner Name: {{user.summonerName}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Team: {{user?.team?.tag}} - {{user?.team?.name}}</label>
-                                        </div>
+                                        <mat-card>
+                                            <div class="label-spacing">
+                                                <label>Summoner Name: {{user.summonerName}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Summoner Level: {{user.summonerLevel}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Profile Icon Id: {{user.profileIconId}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Last Updated: {{user.lastUpdated}}</label>
+                                            </div>
+                                        </mat-card>
+                                        <mat-card>
+                                            <div class="label-spacing">
+                                                <label>Solo Tier: {{user.soloTier}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Solo Rank: {{user.soloRank}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Solo LP: {{user.soloLP}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Solo Wins: {{user.soloWins}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Solo Losses: {{user.soloLosses}}</label>
+                                            </div>
+                                        </mat-card>
+                                        <mat-card>
+                                            <div class="label-spacing">
+                                                <label>Flex Tier: {{user.flexTier}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Flex Rank: {{user.flexRank}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Flex LP: {{user.flexLP}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Flex Wins: {{user.flexWins}}</label>
+                                            </div>
+                                            <div class="label-spacing">
+                                                <label>Flex Losses: {{user.flexLosses}}</label>
+                                            </div>
+                                        </mat-card>
+                                        <mat-card>
+                                            <div class="label-spacing">
+                                                <label>Team: {{user?.team?.tag}} - {{user?.team?.name}}</label>
+                                            </div>
+                                        </mat-card>
+                                        
+                                        
                                         <div class="label-spacing">
                                             <label>Free agent: {{user.freeAgent}}</label>
                                         </div>
-                                        <div class="label-spacing">
-                                            <label>Summoner Level: {{user.summonerLevel}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Profile Icon Id: {{user.profileIconId}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Last Updated: {{user.lastUpdated}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Solo Tier: {{user.soloTier}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Solo Rank: {{user.soloRank}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Solo LP: {{user.soloLP}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Solo Wins: {{user.soloWins}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Solo Losses: {{user.soloLosses}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Flex Tier: {{user.flexTier}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Flex Rank: {{user.flexRank}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Flex LP: {{user.flexLP}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Flex Wins: {{user.flexWins}}</label>
-                                        </div>
-                                        <div class="label-spacing">
-                                            <label>Flex Losses: {{user.flexLosses}}</label>
-                                        </div>
+                                        
+                                        
+                                        
                                     </div>
                                 </div>
                                 <div>

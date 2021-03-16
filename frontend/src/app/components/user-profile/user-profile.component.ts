@@ -188,7 +188,7 @@ export class UserProfileComponent implements OnInit {
     this.inviteService.inviteResponse(invite._id).subscribe((res) => {
       this.userService.deleteIncomingInvite({invite: invite, user: this.user}).subscribe((res) => {
 
-        this.teamService.getTeam(invite.sender).subscribe((team: Team) => {
+        this.teamService.getTeam(invite.sender._id).subscribe((team: Team) => {
           this.teamService.deleteOutgoingInvite({invite: invite, team: team}).subscribe((res) => {
             this.teamService.addMember({user: this.user, team: team}).subscribe((res) => {
               this.userService.addToTeam({user: this.user, team: team}).subscribe((res) => {
@@ -205,7 +205,7 @@ export class UserProfileComponent implements OnInit {
     this.inviteService.inviteResponse(invite._id).subscribe((res) => {
       this.userService.deleteIncomingInvite({invite: invite, user: this.user}).subscribe((res) => {
 
-        this.teamService.getTeam(invite.sender).subscribe((team: Team) => {
+        this.teamService.getTeam(invite.sender._id).subscribe((team: Team) => {
           console.log(team);
           this.teamService.deleteOutgoingInvite({invite: invite, team: team}).subscribe((res) => {
             

@@ -25,6 +25,10 @@ export class TeamService {
     return this.httpClient.post(this.baseUrl + 'getTeamsWithIds', ids);
   }
 
+  getActivelyRecruitingTeams() {
+    return this.httpClient.post(this.baseUrl + 'activelyRecruitingTeams', null);
+  }
+
   createTeam(object: any) {
     return this.httpClient.post(this.baseUrl, object);
   }

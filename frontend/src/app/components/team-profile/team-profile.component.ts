@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,7 +7,7 @@ import { TeamService } from '../../services/team-service/team.service';
 import { RoleService } from '../../services/role-service/role.service';
 import { InviteService } from '../../services/invite-service/invite.service';
 import { NotificationService } from '../../services/notification-service/notification.service';
-import { User, Role, Team, Invite, Match, Tournament } from '../../services/models';
+import { User, Role, Team, Invite, TeamMember, Match, Tournament } from '../../services/models';
 import { TeamProfileDialogComponent } from '../team-profile-dialog/team-profile-dialog.component';
 import { AuthenticationService, UserDetails } from '../../services/authentication-service/authentication.service';
 
@@ -80,7 +79,7 @@ export class TeamProfileComponent implements OnInit {
     _id: '',
     name: '',
     tag: '',
-    logo: '',
+    logo: 'http://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/clash/roster-logos/1/1.png',
     description: '',
     twitchUrl: '',
     twitterUrl: '',
@@ -212,7 +211,7 @@ export class TeamProfileComponent implements OnInit {
         if (userData.team !== null) {
           this.teamService.getTeam(userData.team._id).subscribe((teamData: Team) => {
             this.team = teamData;
-            console.log(this.team.description);
+            console.log(this.team);
             for (let player in teamData.playerRoster) {
               members.push(teamData.playerRoster[player]);
             }
@@ -221,11 +220,21 @@ export class TeamProfileComponent implements OnInit {
             }
             members.sort(this.compare);
             this.members.data = members;
+            console.log(this.members.data);
 
+            // if (this.team.owner._id === this.user._id || this.team.managers.includes(this.user)) {
+            //   this.userCanEdit = true;
+            // }
 
-            if (this.team.owner._id === this.user._id || this.team.managers.includes(this.user)) {
+            if (this.team.owner._id === this.user._id) {
               this.userCanEdit = true;
             }
+
+            fetch('https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/1.json').then(res => res.json())
+            .then((out) => {
+              //console.log('Output: ', out);
+            }).catch(err => console.error(err));
+            //console.log(JSON.stringify('https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/1.json'));
 
             this.userService.getFreeAgents().subscribe((users: [User]) => {
               this.users.data = users;
@@ -244,21 +253,21 @@ export class TeamProfileComponent implements OnInit {
     console.log('yes');
   }
 
-  onSubmitCreateTeam(form: NgForm) {
+  onSubmitCreateTeam() {
     this.teamService.createTeam({ team: this.team, user: this.user }).subscribe((teamData: Team) => {
       this.user.team = teamData;
-      console.log(this.user.team);
       this.userService.addToTeam({user: this.user, team: teamData}).subscribe((userData: User) => {
-        
-        this.createMode = false;
-        this.update(this.userDetails);
+        this.userService.createTeamMember(this.user, teamData).subscribe((teamMember: TeamMember) => {
+          this.createMode = false;
+          this.update(this.userDetails);
+        });
       })
     }, (err) => {
       console.error(err);
     })
   }
 
-  onSubmitEditTeam(form: NgForm) {
+  onSubmitEditTeam() {
     console.log(this.teamEdit);
     this.teamService.editTeam(this.teamEdit).subscribe((res) => {
       this.editMode = false;
@@ -308,16 +317,21 @@ export class TeamProfileComponent implements OnInit {
   }
 
   confirmAddMember() {
-     this.teamService.addMember({team: this.team, user: this.selectedUser}).subscribe((res) => {
+    this.teamService.addMember({team: this.team, user: this.selectedUser}).subscribe((res) => {
       this.userService.addToTeam({team: this.team, user: this.selectedUser}).subscribe((res) => {
-        this.addMemberMode = false;
-        this.update(this.userDetails);
+        this.userService.createTeamMember(this.selectedUser, this.team).subscribe((teamMember: TeamMember) => {
+          console.log(teamMember);
+          this.addMemberMode = false;
+          this.update(this.userDetails);
+        }, (err2) => {
+          console.error(err2);
+        });
       }, (err1) => {
         console.error(err1);
       });
-     }, (err) => {
-       console.error(err);
-   });
+    }, (err) => {
+    console.error(err);
+    });
   }
 
   inviteMember() {
@@ -357,6 +371,10 @@ export class TeamProfileComponent implements OnInit {
   }
 
   changeTeamLogo(logo: String) {
+    this.team.logo = logo;
+  }
+
+  changeTeamEditLogo(logo: String) {
     this.teamEdit.logo = logo;
   }
 }
