@@ -15,10 +15,10 @@ var teamSchema = new Schema({
   dateCreated: { type: Date, required: true },
   dateDisbanded: Date,
 
-  owner: { type: Schema.Types.ObjectId, ref: 'TeamMember' },
-  managers: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
-  playerRoster: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
-  coachRoster: [{ type: Schema.Types.ObjectId, ref: 'TeamMember' }],
+  owner: { type: Schema.Types.ObjectId, ref: 'User' },
+  managers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  playerRoster: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  coachRoster: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   averageRank: { type: Schema.Types.ObjectId, ref: 'Rank' },
 
   previousMembers: [{ type: Schema.Types.ObjectId, ref: 'TeamMember'}],

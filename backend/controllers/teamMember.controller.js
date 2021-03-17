@@ -19,6 +19,8 @@ router.get('/:id', (req, res) => {
     TeamMember.findById(req.params.id, (err, docs) => {
         if (!err) res.send(docs);
         else console.log('Error in retrieving team member: ' + JSON.stringify(err, undefined, 2));
+    }).populate({ path: 'user', populate: { path: 'role'}}).populate('team').exec((err, teamMember) => {
+
     });
 });
 

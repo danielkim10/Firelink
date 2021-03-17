@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
 //#region Post
 
 router.post('/freeAgents', (req, res) => {
-  User.find({teamID: null, freeAgent: true}, (err, doc) => {
+  User.find({team: null, freeAgent: true}, (err, doc) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving users: ' + JSON.stringify(err, undefined, 2));
   }).populate('role');

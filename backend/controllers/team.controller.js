@@ -40,10 +40,10 @@ router.post('/', (req, res) => {
   //let playerRoster = [];
   //let coachRoster = [];
   if (req.body.user.role.name === 'Player') {
-    req.body.team.playerRoster.push(req.body.user._id);
+   req.body.team.playerRoster.push(req.body.user._id);
   }
   else if (req.body.user.role.name === 'Coach') {
-    req.body.team.coachRoster.push(req.body.user._id);
+   req.body.team.coachRoster.push(req.body.user._id);
   }
 
   req.body.team.owner = req.body.user._id;
@@ -96,6 +96,13 @@ router.post('/getTeamsWithIds', (req, res) => {
     if (!err) res.send(doc);
     else console.log('Error in retrieving team: ' + JSON.stringify(err, undefined, 2));
   });
+});
+
+router.post('/activelyRecruitingTeams', (req, res) => {
+  Team.find({activelyRecruiting: true}, (err, doc) => {
+    if (!err) res.send(doc);
+    else console.log('Error in retrieving teams: ' + JSON.stringify(err, undefined, 2));
+  }).populate('owner');
 });
 
 //#endregion
@@ -219,10 +226,10 @@ router.put('/addMember/:id', (req, res) => {
     return res.status(400).send(`No team with given id: ${req.params.id}`);
   }
 
-  if (req.body.user.role.name === 'Player') {
+  if (req.body.teamMember.user.role.name === 'Player') {
     req.body.team.playerRoster.push(req.body.user._id);
   }
-  else if (req.body.user.role.name === 'Coach') {
+  else if (req.body.teamMember.user.role.name === 'Coach') {
     req.body.team.coachRoster.push(req.body.user._id);
   }
 
